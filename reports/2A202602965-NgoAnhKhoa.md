@@ -11,7 +11,7 @@
 
 | Module/deliverable | Việc tôi trực tiếp làm | File/commit/PR | Trạng thái |
 |---|---|---|---|
-| Chunking/indexing | Xây dựng loader Markdown/front matter, chunk ID ổn định, embedding dispatch, Chroma upsert | `src/task4_chunking_indexing.py` | Partial — chờ corpus thật để chạy index |
+| Chunking/indexing | Xây dựng loader Markdown/front matter, giữ metadata pháp lý, chunk ID ổn định, embedding dispatch, Chroma upsert | `src/task4_chunking_indexing.py` | Partial — chờ chạy embedding/index thật |
 | Dense retrieval | Map Chroma cosine distance sang `SearchResult`, chuẩn hóa metadata và thứ tự | `src/task5_semantic_search.py` | Done |
 | BM25 retrieval | Tokenize Unicode, BM25, lazy-load cùng corpus chunks với dense retrieval | `src/task6_lexical_search.py` | Done |
 | Hybrid retrieval | Cài đặt RRF theo ID, chống trùng và không mutate input | `src/task7_reranking.py` | Done |
@@ -40,8 +40,8 @@ Mô tả tối đa hai quyết định mà bạn trực tiếp tham gia:
 
 ## Điều còn hạn chế
 
-- Một hạn chế cụ thể của phần tôi làm: chưa thể đánh giá retrieval quality, threshold, citation correctness end-to-end hoặc PageIndex khi nhóm chưa chọn topic, chưa có corpus và API configuration.
-- Nếu có thêm thời gian, thay đổi đầu tiên tôi sẽ thực hiện: sau khi có corpus thật, chạy indexing, tạo golden dataset và hiệu chỉnh `SCORE_THRESHOLD` bằng query in-domain/out-of-domain.
+- Một hạn chế cụ thể của phần tôi làm: chưa đánh giá retrieval quality, threshold, citation correctness end-to-end hoặc PageIndex trên corpus đã tích hợp vì chưa chạy embedding và chưa có API configuration.
+- Nếu có thêm thời gian, thay đổi đầu tiên tôi sẽ thực hiện: chạy indexing, tạo golden dataset từ corpus pháp luật và hiệu chỉnh `SCORE_THRESHOLD` bằng query in-domain/out-of-domain.
 
 ## Xác nhận đóng góp
 

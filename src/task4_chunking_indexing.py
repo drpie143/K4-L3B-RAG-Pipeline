@@ -91,10 +91,16 @@ def load_documents() -> list[dict]:
             continue
         metadata, content = _parse_front_matter(raw)
         relative_path = path.relative_to(STANDARDIZED_DIR)
+        source_metadata = {
+            key: value
+            for key, value in metadata.items()
+            if value not in (None, "")
+        }
         document = {
             "id": relative_path.with_suffix("").as_posix(),
             "content": content.strip(),
             "metadata": {
+                **source_metadata,
                 "source": metadata.get("source") or path.name,
                 "title": metadata.get("title") or path.stem.replace("_", " "),
                 "doc_type": metadata.get("doc_type") or relative_path.parts[0],

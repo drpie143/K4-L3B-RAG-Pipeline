@@ -7,7 +7,7 @@ from src.task10_generation import generate_with_citation
 load_dotenv()
 
 st.set_page_config(
-    page_title="RAG Chatbot",
+    page_title="RAG Pháp luật hộ kinh doanh",
     page_icon="💬",
     layout="wide",
 )
@@ -16,11 +16,11 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 with st.sidebar:
-    st.title("RAG Chatbot")
-    st.caption("Chủ đề và corpus sẽ được cấu hình sau khi nhóm thống nhất.")
+    st.title("Pháp luật hộ kinh doanh")
+    st.caption("Nguồn: văn bản pháp luật và bài hướng dẫn đã được nhóm thu thập.")
     top_k = st.slider("Số chunks", 3, 10, 5)
 
-st.title("RAG Chatbot")
+st.title("Trợ lý pháp luật cho hộ kinh doanh")
 st.caption("Câu trả lời chỉ được tạo từ các nguồn đã index và luôn kèm citation.")
 
 
