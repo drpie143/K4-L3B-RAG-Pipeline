@@ -1,0 +1,469 @@
+{
+  "corpus_commit": "d61ae1608bc9f3fb4e6473520bde4540844850cf",
+  "top_k": 5,
+  "golden_size": 15,
+  "dense": {
+    "hit_at_5": 1.0,
+    "mrr_at_5": 0.8055555555555556,
+    "mean_context_token_recall": 0.9866425574705873,
+    "mean_latency_ms": 125.1323066680925
+  },
+  "hybrid": {
+    "hit_at_5": 1.0,
+    "mrr_at_5": 0.8888888888888888,
+    "mean_context_token_recall": 0.9866425574705873,
+    "mean_latency_ms": 131.09509333347282
+  },
+  "threshold_calibration": {
+    "suggested_threshold": 0.5512733459472656,
+    "classification_accuracy": 1.0,
+    "in_domain_min": 0.6775899529457092,
+    "in_domain_median": 0.7355306148529053,
+    "out_of_domain_max": 0.424956738948822,
+    "out_of_domain_median": 0.36086416244506836
+  },
+  "out_of_domain": [
+    {
+      "question": "Thời tiết Hà Nội ngày mai thế nào?",
+      "best_dense_score": 0.424956738948822
+    },
+    {
+      "question": "Cách nấu phở bò ngon tại nhà",
+      "best_dense_score": 0.36086416244506836
+    },
+    {
+      "question": "Đội nào vô địch bóng đá thế giới gần nhất?",
+      "best_dense_score": 0.2873101234436035
+    },
+    {
+      "question": "Viết hàm Python sắp xếp một danh sách",
+      "best_dense_score": 0.39978331327438354
+    },
+    {
+      "question": "Triệu chứng cảm cúm nên uống thuốc gì?",
+      "best_dense_score": 0.3523944020271301
+    }
+  ],
+  "cases": [
+    {
+      "question": "Ai có quyền thành lập hộ kinh doanh và phải chịu trách nhiệm tài sản như thế nào?",
+      "expected_source": "nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2.pdf",
+      "dense": {
+        "source_rank": 2,
+        "context_token_recall": 1.0,
+        "latency_ms": 68.73749999795109,
+        "result_ids": [
+          "news/article_02::chunk-1",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-1",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-4",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-5",
+          "legal/nghi-dinh-68-2026-thue-ho-kinh-doanh::chunk-29"
+        ]
+      },
+      "hybrid": {
+        "source_rank": 1,
+        "context_token_recall": 1.0,
+        "latency_ms": 64.53759998839814,
+        "result_ids": [
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-1",
+          "news/article_02::chunk-1",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-4",
+          "legal/nghi-dinh-68-2026-thue-ho-kinh-doanh::chunk-29",
+          "legal/nghi-dinh-296-2026-sua-doi-nghi-dinh-168-dang-ky-doanh-nghiep::chunk-21"
+        ]
+      }
+    },
+    {
+      "question": "Một cá nhân được đăng ký bao nhiêu hộ kinh doanh trên toàn quốc?",
+      "expected_source": "nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2.pdf",
+      "dense": {
+        "source_rank": 1,
+        "context_token_recall": 1.0,
+        "latency_ms": 60.86019999929704,
+        "result_ids": [
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-3",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-15",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-1",
+          "news/article_02::chunk-1",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-11"
+        ]
+      },
+      "hybrid": {
+        "source_rank": 1,
+        "context_token_recall": 1.0,
+        "latency_ms": 63.57379999826662,
+        "result_ids": [
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-3",
+          "news/article_02::chunk-1",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-1",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-1::chunk-4",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-15"
+        ]
+      }
+    },
+    {
+      "question": "Tên hộ kinh doanh phải gồm những thành tố nào?",
+      "expected_source": "nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2.pdf",
+      "dense": {
+        "source_rank": 1,
+        "context_token_recall": 1.0,
+        "latency_ms": 57.63780001143459,
+        "result_ids": [
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-8",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-9",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-1",
+          "news/article_02::chunk-1",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-1::chunk-3"
+        ]
+      },
+      "hybrid": {
+        "source_rank": 1,
+        "context_token_recall": 1.0,
+        "latency_ms": 59.98900000122376,
+        "result_ids": [
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-8",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-9",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-1",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-1::chunk-21",
+          "news/article_02::chunk-1"
+        ]
+      }
+    },
+    {
+      "question": "Một hộ kinh doanh có thể có nhiều địa điểm kinh doanh không?",
+      "expected_source": "nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2.pdf",
+      "dense": {
+        "source_rank": 1,
+        "context_token_recall": 1.0,
+        "latency_ms": 123.31819999963045,
+        "result_ids": [
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-10",
+          "news/article_04::chunk-3",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-12",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-15",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-9"
+        ]
+      },
+      "hybrid": {
+        "source_rank": 1,
+        "context_token_recall": 1.0,
+        "latency_ms": 171.16779999923892,
+        "result_ids": [
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-10",
+          "news/article_04::chunk-3",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-54",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-12",
+          "legal/nghi-dinh-68-2026-thue-ho-kinh-doanh::chunk-4"
+        ]
+      }
+    },
+    {
+      "question": "Ủy quyền cho cá nhân làm thủ tục đăng ký hộ kinh doanh có bắt buộc công chứng, chứng thực không?",
+      "expected_source": "nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2.pdf",
+      "dense": {
+        "source_rank": 2,
+        "context_token_recall": 1.0,
+        "latency_ms": 147.41269999649376,
+        "result_ids": [
+          "legal/nghi-dinh-296-2026-sua-doi-nghi-dinh-168-dang-ky-doanh-nghiep::chunk-21",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-21",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-20",
+          "legal/nghi-dinh-296-2026-sua-doi-nghi-dinh-168-dang-ky-doanh-nghiep::chunk-3",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-1::chunk-19"
+        ]
+      },
+      "hybrid": {
+        "source_rank": 1,
+        "context_token_recall": 1.0,
+        "latency_ms": 149.04930000193417,
+        "result_ids": [
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-20",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-1::chunk-18",
+          "news/article_02::chunk-1",
+          "legal/nghi-dinh-296-2026-sua-doi-nghi-dinh-168-dang-ky-doanh-nghiep::chunk-21",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-21"
+        ]
+      }
+    },
+    {
+      "question": "Có những phương thức nào để đăng ký hộ kinh doanh?",
+      "expected_source": "nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2.pdf",
+      "dense": {
+        "source_rank": 1,
+        "context_token_recall": 1.0,
+        "latency_ms": 120.12630001117941,
+        "result_ids": [
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-22",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-29",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-20",
+          "news/article_02::chunk-5",
+          "legal/nghi-dinh-296-2026-sua-doi-nghi-dinh-168-dang-ky-doanh-nghiep::chunk-24"
+        ]
+      },
+      "hybrid": {
+        "source_rank": 1,
+        "context_token_recall": 1.0,
+        "latency_ms": 123.27330000698566,
+        "result_ids": [
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-22",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-29",
+          "news/article_06::chunk-6",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-20",
+          "news/article_02::chunk-2"
+        ]
+      }
+    },
+    {
+      "question": "Hồ sơ đăng ký thành lập hộ kinh doanh được nộp ở đâu và gồm giấy tờ cơ bản nào?",
+      "expected_source": "nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2.pdf",
+      "dense": {
+        "source_rank": 1,
+        "context_token_recall": 0.9761904761904762,
+        "latency_ms": 140.27180000266526,
+        "result_ids": [
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-29",
+          "news/article_02::chunk-5",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-11",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-1::chunk-51",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-1"
+        ]
+      },
+      "hybrid": {
+        "source_rank": 2,
+        "context_token_recall": 0.9761904761904762,
+        "latency_ms": 144.67439999862108,
+        "result_ids": [
+          "news/article_02::chunk-5",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-29",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-15",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-1::chunk-51",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-31"
+        ]
+      }
+    },
+    {
+      "question": "Hộ kinh doanh tạm ngừng từ bao nhiêu ngày phải đăng ký và thời hạn mỗi lần tạm ngừng tối đa là bao lâu?",
+      "expected_source": "nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2.pdf",
+      "dense": {
+        "source_rank": 1,
+        "context_token_recall": 0.9714285714285714,
+        "latency_ms": 159.72399999736808,
+        "result_ids": [
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-37",
+          "legal/nghi-dinh-296-2026-sua-doi-nghi-dinh-168-dang-ky-doanh-nghiep::chunk-28",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-1::chunk-124",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-1::chunk-125",
+          "legal/nghi-dinh-296-2026-sua-doi-nghi-dinh-168-dang-ky-doanh-nghiep::chunk-16"
+        ]
+      },
+      "hybrid": {
+        "source_rank": 1,
+        "context_token_recall": 0.9714285714285714,
+        "latency_ms": 156.8727999983821,
+        "result_ids": [
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-37",
+          "legal/nghi-dinh-296-2026-sua-doi-nghi-dinh-168-dang-ky-doanh-nghiep::chunk-28",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-1::chunk-120",
+          "legal/nghi-dinh-296-2026-sua-doi-nghi-dinh-168-dang-ky-doanh-nghiep::chunk-15",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-1::chunk-122"
+        ]
+      }
+    },
+    {
+      "question": "Trước khi chấm dứt hoạt động, hộ kinh doanh phải xử lý các khoản nợ thế nào?",
+      "expected_source": "nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2.pdf",
+      "dense": {
+        "source_rank": 1,
+        "context_token_recall": 0.9767441860465116,
+        "latency_ms": 134.68879999709316,
+        "result_ids": [
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-39",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-42",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-41",
+          "legal/nghi-dinh-68-2026-thue-ho-kinh-doanh::chunk-20",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-40"
+        ]
+      },
+      "hybrid": {
+        "source_rank": 1,
+        "context_token_recall": 0.9767441860465116,
+        "latency_ms": 143.45880001201294,
+        "result_ids": [
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-39",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-42",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-41",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-49",
+          "news/article_07::chunk-8"
+        ]
+      }
+    },
+    {
+      "question": "Đăng ký hộ kinh doanh qua mạng sử dụng loại tài khoản nào?",
+      "expected_source": "nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2.pdf",
+      "dense": {
+        "source_rank": 1,
+        "context_token_recall": 0.9655172413793104,
+        "latency_ms": 124.55770000815392,
+        "result_ids": [
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-57",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-56",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-59",
+          "legal/nghi-dinh-296-2026-sua-doi-nghi-dinh-168-dang-ky-doanh-nghiep::chunk-24",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-26"
+        ]
+      },
+      "hybrid": {
+        "source_rank": 1,
+        "context_token_recall": 0.9655172413793104,
+        "latency_ms": 124.28950000321493,
+        "result_ids": [
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-56",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-57",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-77",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-59",
+          "legal/nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2::chunk-26"
+        ]
+      }
+    },
+    {
+      "question": "Nghị định 141/2026/NĐ-CP thay ngưỡng 500 triệu đồng trong Nghị định 68/2026/NĐ-CP thành mức nào?",
+      "expected_source": "nghi-dinh-141-2026-sua-doi-nghi-dinh-68-thue-ho-kinh-doanh.docx",
+      "dense": {
+        "source_rank": 1,
+        "context_token_recall": 1.0,
+        "latency_ms": 155.39529999659862,
+        "result_ids": [
+          "legal/nghi-dinh-141-2026-sua-doi-nghi-dinh-68-thue-ho-kinh-doanh::chunk-1",
+          "legal/nghi-dinh-141-2026-sua-doi-nghi-dinh-68-thue-ho-kinh-doanh::chunk-0",
+          "legal/nghi-dinh-141-2026-sua-doi-nghi-dinh-68-thue-ho-kinh-doanh::chunk-2",
+          "legal/nghi-dinh-141-2026-sua-doi-nghi-dinh-68-thue-ho-kinh-doanh::chunk-5",
+          "legal/nghi-dinh-141-2026-sua-doi-nghi-dinh-68-thue-ho-kinh-doanh::chunk-7"
+        ]
+      },
+      "hybrid": {
+        "source_rank": 1,
+        "context_token_recall": 1.0,
+        "latency_ms": 159.4485999958124,
+        "result_ids": [
+          "legal/nghi-dinh-141-2026-sua-doi-nghi-dinh-68-thue-ho-kinh-doanh::chunk-1",
+          "news/article_01::chunk-1",
+          "legal/nghi-dinh-141-2026-sua-doi-nghi-dinh-68-thue-ho-kinh-doanh::chunk-7",
+          "legal/nghi-dinh-141-2026-sua-doi-nghi-dinh-68-thue-ho-kinh-doanh::chunk-0",
+          "news/article_01::chunk-2"
+        ]
+      }
+    },
+    {
+      "question": "Hộ kinh doanh có doanh thu năm trên 01 tỷ đồng có bắt buộc dùng hóa đơn điện tử không?",
+      "expected_source": "nghi-dinh-141-2026-sua-doi-nghi-dinh-68-thue-ho-kinh-doanh.docx",
+      "dense": {
+        "source_rank": 4,
+        "context_token_recall": 1.0,
+        "latency_ms": 144.82499999576248,
+        "result_ids": [
+          "news/article_01::chunk-3",
+          "legal/nghi-dinh-254-2026-hoa-don-dien-tu::chunk-49",
+          "legal/nghi-dinh-68-2026-thue-ho-kinh-doanh::chunk-19",
+          "legal/nghi-dinh-141-2026-sua-doi-nghi-dinh-68-thue-ho-kinh-doanh::chunk-2",
+          "legal/nghi-dinh-254-2026-hoa-don-dien-tu::chunk-22"
+        ]
+      },
+      "hybrid": {
+        "source_rank": 3,
+        "context_token_recall": 1.0,
+        "latency_ms": 145.00699999916833,
+        "result_ids": [
+          "news/article_01::chunk-3",
+          "legal/nghi-dinh-68-2026-thue-ho-kinh-doanh::chunk-19",
+          "legal/nghi-dinh-141-2026-sua-doi-nghi-dinh-68-thue-ho-kinh-doanh::chunk-2",
+          "legal/nghi-dinh-254-2026-hoa-don-dien-tu::chunk-14",
+          "news/article_04::chunk-2"
+        ]
+      }
+    },
+    {
+      "question": "Trong năm doanh thu lũy kế vượt 01 tỷ đồng thì hộ kinh doanh phải đăng ký hóa đơn điện tử trong bao lâu?",
+      "expected_source": "nghi-dinh-141-2026-sua-doi-nghi-dinh-68-thue-ho-kinh-doanh.docx",
+      "dense": {
+        "source_rank": 3,
+        "context_token_recall": 1.0,
+        "latency_ms": 149.91350000491366,
+        "result_ids": [
+          "news/article_01::chunk-3",
+          "legal/nghi-dinh-254-2026-hoa-don-dien-tu::chunk-19",
+          "legal/nghi-dinh-141-2026-sua-doi-nghi-dinh-68-thue-ho-kinh-doanh::chunk-2",
+          "legal/nghi-dinh-254-2026-hoa-don-dien-tu::chunk-29",
+          "legal/nghi-dinh-68-2026-thue-ho-kinh-doanh::chunk-18"
+        ]
+      },
+      "hybrid": {
+        "source_rank": 2,
+        "context_token_recall": 1.0,
+        "latency_ms": 152.73029998934362,
+        "result_ids": [
+          "news/article_01::chunk-3",
+          "legal/nghi-dinh-141-2026-sua-doi-nghi-dinh-68-thue-ho-kinh-doanh::chunk-2",
+          "legal/nghi-dinh-68-2026-thue-ho-kinh-doanh::chunk-19",
+          "legal/nghi-dinh-254-2026-hoa-don-dien-tu::chunk-19",
+          "legal/nghi-dinh-254-2026-hoa-don-dien-tu::chunk-29"
+        ]
+      }
+    },
+    {
+      "question": "Ai có trách nhiệm khấu trừ và nộp thuế thay cho giao dịch của hộ, cá nhân trên nền tảng thương mại điện tử có chức năng thanh toán?",
+      "expected_source": "nghi-dinh-117-2025-thue-thuong-mai-dien-tu.pdf",
+      "dense": {
+        "source_rank": 2,
+        "context_token_recall": 0.9310344827586207,
+        "latency_ms": 167.7166000008583,
+        "result_ids": [
+          "news/article_05::chunk-2",
+          "legal/nghi-dinh-117-2025-thue-thuong-mai-dien-tu::chunk-4",
+          "legal/nghi-dinh-117-2025-thue-thuong-mai-dien-tu::chunk-9",
+          "legal/nghi-dinh-117-2025-thue-thuong-mai-dien-tu::chunk-10",
+          "legal/nghi-dinh-117-2025-thue-thuong-mai-dien-tu::chunk-1"
+        ]
+      },
+      "hybrid": {
+        "source_rank": 1,
+        "context_token_recall": 0.9310344827586207,
+        "latency_ms": 174.6811000048183,
+        "result_ids": [
+          "legal/nghi-dinh-117-2025-thue-thuong-mai-dien-tu::chunk-4",
+          "legal/nghi-dinh-117-2025-thue-thuong-mai-dien-tu::chunk-1",
+          "legal/nghi-dinh-68-2026-thue-ho-kinh-doanh::chunk-24",
+          "legal/nghi-dinh-117-2025-thue-thuong-mai-dien-tu::chunk-6",
+          "news/article_05::chunk-2"
+        ]
+      }
+    },
+    {
+      "question": "Hóa đơn điện tử khởi tạo từ máy tính tiền là gì?",
+      "expected_source": "nghi-dinh-254-2026-hoa-don-dien-tu.docx",
+      "dense": {
+        "source_rank": 1,
+        "context_token_recall": 0.9787234042553191,
+        "latency_ms": 121.79920000198763,
+        "result_ids": [
+          "legal/nghi-dinh-254-2026-hoa-don-dien-tu::chunk-26",
+          "news/article_07::chunk-12",
+          "legal/nghi-dinh-254-2026-hoa-don-dien-tu::chunk-4",
+          "legal/nghi-dinh-254-2026-hoa-don-dien-tu::chunk-37",
+          "legal/nghi-dinh-254-2026-hoa-don-dien-tu::chunk-14"
+        ]
+      },
+      "hybrid": {
+        "source_rank": 1,
+        "context_token_recall": 0.9787234042553191,
+        "latency_ms": 133.67310000467114,
+        "result_ids": [
+          "legal/nghi-dinh-254-2026-hoa-don-dien-tu::chunk-26",
+          "legal/nghi-dinh-254-2026-hoa-don-dien-tu::chunk-4",
+          "news/article_07::chunk-12",
+          "legal/nghi-dinh-254-2026-hoa-don-dien-tu::chunk-14",
+          "legal/nghi-dinh-68-2026-thue-ho-kinh-doanh::chunk-19"
+        ]
+      }
+    }
+  ]
+}

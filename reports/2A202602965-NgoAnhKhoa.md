@@ -11,12 +11,12 @@
 
 | Module/deliverable | Việc tôi trực tiếp làm | File/commit/PR | Trạng thái |
 |---|---|---|---|
-| Chunking/indexing | Xây dựng loader Markdown/front matter, giữ metadata pháp lý, chunk ID ổn định, embedding dispatch, Chroma upsert | `src/task4_chunking_indexing.py` | Partial — chờ chạy embedding/index thật |
+| Chunking/indexing | Chunk hierarchy theo Chương/Mục/Điều không overlap, giữ metadata pháp lý, embedding BGE-M3 và Chroma upsert | `src/task4_chunking_indexing.py` | Done — 526 chunks đã index |
 | Dense retrieval | Map Chroma cosine distance sang `SearchResult`, chuẩn hóa metadata và thứ tự | `src/task5_semantic_search.py` | Done |
 | BM25 retrieval | Tokenize Unicode, BM25, lazy-load cùng corpus chunks với dense retrieval | `src/task6_lexical_search.py` | Done |
 | Hybrid retrieval | Cài đặt RRF theo ID, chống trùng và không mutate input | `src/task7_reranking.py` | Done |
 | Retrieval pipeline | Ghép dense + BM25, RRF một lần, fallback theo dense score, chịu lỗi provider | `src/task9_retrieval_pipeline.py` | Done |
-| Generation/citation | Reorder context, nhãn `[S#]`, dispatch 3 LLM provider và safe refusal | `src/task10_generation.py` | Partial — chờ API/model thật để kiểm thử |
+| Generation/citation | Reorder context, metadata hiệu lực, nhãn `[S#]`, OpenAI Responses API và kiểm tra citation | `src/task10_generation.py` | Partial — API key hiện trả `token_invalidated` |
 | Streamlit UI | Nối pipeline thật, lưu chat history, hiển thị nguồn/method/score | `app.py` | Partial — chờ corpus để demo end-to-end |
 | Contract validation | Siết schema document/search/generation và `doc_type` | `src/contracts.py` | Done |
 
@@ -34,14 +34,14 @@ Mô tả tối đa hai quyết định mà bạn trực tiếp tham gia:
 
 ## Kiểm thử và kết quả
 
-- Test hoặc query tôi đã dùng: `py -3.14 -m pytest tests/test_contracts.py -q`; `py -3.14 -m compileall -q src app.py`.
-- Kết quả trước/sau nếu có: contract tests từ 7 pass/8 fail thành 15 pass/0 fail.
+- Test hoặc query tôi đã dùng: `python -m pytest tests/test_contracts.py -q`; `python -m group_project.evaluation.evaluate_retrieval`.
+- Kết quả trước/sau nếu có: contract tests 15/15 pass; chunk count giảm từ 1.284 xuống 526; hybrid MRR@5 đạt 0,889 so với dense 0,806 trên 15 câu thật.
 - Lỗi đã phát hiện và cách xử lý: RRF/dense/BM25/retrieval/generation còn `NotImplementedError`; đã cài đặt theo module contract. Citation source được trả cùng thứ tự reorder để `[S#]` đối chiếu đúng.
 
 ## Điều còn hạn chế
 
-- Một hạn chế cụ thể của phần tôi làm: chưa đánh giá retrieval quality, threshold, citation correctness end-to-end hoặc PageIndex trên corpus đã tích hợp vì chưa chạy embedding và chưa có API configuration.
-- Nếu có thêm thời gian, thay đổi đầu tiên tôi sẽ thực hiện: chạy indexing, tạo golden dataset từ corpus pháp luật và hiệu chỉnh `SCORE_THRESHOLD` bằng query in-domain/out-of-domain.
+- Một hạn chế cụ thể của phần tôi làm: chưa đo generation/RAGAS và citation end-to-end vì OpenAI key hiện bị vô hiệu hóa; PageIndex chưa có API key.
+- Nếu có thêm thời gian, thay đổi đầu tiên tôi sẽ thực hiện: chạy generation/RAGAS bằng key hợp lệ và phân tích các câu retrieval/generation kém nhất.
 
 ## Xác nhận đóng góp
 

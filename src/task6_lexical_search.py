@@ -11,6 +11,8 @@ from collections import Counter
 
 
 CORPUS: list[dict] = []
+_BM25_INDEX = None
+_BM25_CORPUS_ID: int | None = None
 
 
 def _tokenize(text: str) -> list[str]:
@@ -62,7 +64,7 @@ def build_bm25_index(corpus: list[dict]):
 
 def lexical_search(query: str, top_k: int = 10) -> list[dict]:
     """Trả về BM25 SearchResult theo score giảm dần."""
-    global CORPUS
+    global CORPUS, _BM25_INDEX, _BM25_CORPUS_ID
     if not isinstance(query, str) or not query.strip() or top_k <= 0:
         return []
     if not CORPUS:
@@ -72,7 +74,10 @@ def lexical_search(query: str, top_k: int = 10) -> list[dict]:
     if not CORPUS:
         return []
 
-    scores = build_bm25_index(CORPUS).get_scores(_tokenize(query))
+    if _BM25_INDEX is None or _BM25_CORPUS_ID != id(CORPUS):
+        _BM25_INDEX = build_bm25_index(CORPUS)
+        _BM25_CORPUS_ID = id(CORPUS)
+    scores = _BM25_INDEX.get_scores(_tokenize(query))
     ranked_indices = sorted(range(len(CORPUS)), key=lambda index: (-scores[index], index))
     results = []
     seen = set()

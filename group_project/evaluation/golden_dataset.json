@@ -1,0 +1,92 @@
+[
+  {
+    "question": "Ai có quyền thành lập hộ kinh doanh và phải chịu trách nhiệm tài sản như thế nào?",
+    "expected_answer": "Hộ kinh doanh do một cá nhân hoặc các thành viên hộ gia đình đăng ký thành lập; họ chịu trách nhiệm bằng toàn bộ tài sản của mình đối với hoạt động kinh doanh của hộ.",
+    "expected_context": "Hộ kinh doanh do một cá nhân hoặc các thành viên hộ gia đình đăng ký thành lập và chịu trách nhiệm bằng toàn bộ tài sản của mình đối với hoạt động kinh doanh của hộ.",
+    "source": "nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2.pdf — Điều 82"
+  },
+  {
+    "question": "Một cá nhân được đăng ký bao nhiêu hộ kinh doanh trên toàn quốc?",
+    "expected_answer": "Một cá nhân hoặc thành viên hộ gia đình chỉ được đăng ký một hộ kinh doanh trong phạm vi toàn quốc.",
+    "expected_context": "Cá nhân, thành viên hộ gia đình quy định tại khoản 2 Điều 82 Nghị định này chỉ được đăng ký một hộ kinh doanh trong phạm vi toàn quốc.",
+    "source": "nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2.pdf — Điều 83"
+  },
+  {
+    "question": "Tên hộ kinh doanh phải gồm những thành tố nào?",
+    "expected_answer": "Tên hộ kinh doanh gồm cụm từ “Hộ kinh doanh” và tên riêng của hộ kinh doanh, theo đúng thứ tự đó.",
+    "expected_context": "Tên hộ kinh doanh bao gồm hai thành tố theo thứ tự sau đây: a) Cụm từ “Hộ kinh doanh”; b) Tên riêng của hộ kinh doanh.",
+    "source": "nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2.pdf — Điều 86"
+  },
+  {
+    "question": "Một hộ kinh doanh có thể có nhiều địa điểm kinh doanh không?",
+    "expected_answer": "Có. Một hộ kinh doanh có thể có nhiều địa điểm kinh doanh trên cả nước và phải thông báo cho cơ quan thuế, cơ quan quản lý thị trường nơi đặt địa điểm.",
+    "expected_context": "Một hộ kinh doanh có thể có nhiều địa điểm kinh doanh trong phạm vi cả nước. Hộ kinh doanh phải thông báo cho Cơ quan quản lý thuế, cơ quan quản lý thị trường nơi đặt địa điểm kinh doanh.",
+    "source": "nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2.pdf — Điều 87"
+  },
+  {
+    "question": "Ủy quyền cho cá nhân làm thủ tục đăng ký hộ kinh doanh có bắt buộc công chứng, chứng thực không?",
+    "expected_answer": "Không. Hồ sơ phải có văn bản ủy quyền cho cá nhân thực hiện thủ tục, nhưng văn bản này không bắt buộc công chứng hoặc chứng thực.",
+    "expected_context": "Văn bản ủy quyền này không bắt buộc phải công chứng, chứng thực.",
+    "source": "nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2.pdf — Điều 93"
+  },
+  {
+    "question": "Có những phương thức nào để đăng ký hộ kinh doanh?",
+    "expected_answer": "Có ba phương thức: đăng ký trực tiếp tại Cơ quan đăng ký kinh doanh cấp xã, qua dịch vụ bưu chính hoặc qua mạng thông tin điện tử.",
+    "expected_context": "1. Đăng ký trực tiếp tại Cơ quan đăng ký kinh doanh cấp xã. 2. Đăng ký qua dịch vụ bưu chính. 3. Đăng ký qua mạng thông tin điện tử.",
+    "source": "nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2.pdf — Điều 94"
+  },
+  {
+    "question": "Hồ sơ đăng ký thành lập hộ kinh doanh được nộp ở đâu và gồm giấy tờ cơ bản nào?",
+    "expected_answer": "Hồ sơ được gửi tới Cơ quan đăng ký kinh doanh cấp xã nơi đặt trụ sở; gồm giấy đề nghị đăng ký hộ kinh doanh và, nếu hộ do các thành viên gia đình thành lập, bản sao văn bản ủy quyền một thành viên làm chủ hộ đã được công chứng hoặc chứng thực.",
+    "expected_context": "Chủ hộ kinh doanh hoặc người được ủy quyền ... gửi hồ sơ ... đến Cơ quan đăng ký kinh doanh cấp xã nơi hộ kinh doanh đăng ký trụ sở. Hồ sơ ... bao gồm: a) Giấy đề nghị đăng ký hộ kinh doanh; b) Bản sao văn bản ủy quyền của thành viên hộ gia đình cho một thành viên làm chủ hộ kinh doanh ...",
+    "source": "nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2.pdf — Điều 99"
+  },
+  {
+    "question": "Hộ kinh doanh tạm ngừng từ bao nhiêu ngày phải đăng ký và thời hạn mỗi lần tạm ngừng tối đa là bao lâu?",
+    "expected_answer": "Tạm ngừng từ 15 ngày trở lên phải gửi hồ sơ chậm nhất ba ngày làm việc trước ngày tạm ngừng; mỗi lần đăng ký tạm ngừng không quá một năm.",
+    "expected_context": "Trường hợp hộ kinh doanh tạm ngừng kinh doanh từ 15 ngày trở lên ... gửi hồ sơ ... chậm nhất là 03 ngày làm việc trước ngày tạm ngừng ... Thời hạn tạm ngừng kinh doanh của mỗi lần đăng ký không được quá một năm.",
+    "source": "nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2.pdf — Điều 103"
+  },
+  {
+    "question": "Trước khi chấm dứt hoạt động, hộ kinh doanh phải xử lý các khoản nợ thế nào?",
+    "expected_answer": "Hộ kinh doanh phải thanh toán đầy đủ các khoản nợ, gồm nợ thuế và nghĩa vụ tài chính khác, trừ khi hộ kinh doanh và chủ nợ có thỏa thuận khác; trong năm ngày làm việc từ khi trả hết nợ phải gửi hồ sơ chấm dứt hoạt động.",
+    "expected_context": "Hộ kinh doanh có trách nhiệm thanh toán đầy đủ các khoản nợ, gồm cả nợ thuế và nghĩa vụ tài chính khác ... Trong thời hạn 05 ngày làm việc kể từ ngày thanh toán hết các khoản nợ ... gửi hồ sơ đăng ký chấm dứt hoạt động ...",
+    "source": "nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2.pdf — Điều 104"
+  },
+  {
+    "question": "Đăng ký hộ kinh doanh qua mạng sử dụng loại tài khoản nào?",
+    "expected_answer": "Chủ hộ kinh doanh hoặc người được ủy quyền sử dụng tài khoản định danh điện tử trên Hệ thống thông tin về đăng ký hộ kinh doanh.",
+    "expected_context": "Đăng ký hộ kinh doanh qua mạng thông tin điện tử là việc chủ hộ kinh doanh, người được ủy quyền sử dụng tài khoản định danh điện tử để thực hiện việc đăng ký hộ kinh doanh ...",
+    "source": "nghi-dinh-168-2025-dang-ky-doanh-nghiep-phan-2.pdf — Điều 111"
+  },
+  {
+    "question": "Nghị định 141/2026/NĐ-CP thay ngưỡng 500 triệu đồng trong Nghị định 68/2026/NĐ-CP thành mức nào?",
+    "expected_answer": "Ngưỡng 500 triệu đồng được thay bằng 01 tỷ đồng.",
+    "expected_context": "Sửa đổi cụm từ “500 triệu đồng” thành “01 tỷ đồng” tại Điều 3, Điều 4, khoản 1 Điều 8, Điều 9, Điều 10, khoản 3 Điều 11, khoản 1 và khoản 2 Điều 12, khoản 4 Điều 17, khoản 3 Điều 18 Nghị định số 68/2026/NĐ-CP.",
+    "source": "nghi-dinh-141-2026-sua-doi-nghi-dinh-68-thue-ho-kinh-doanh.docx — Điều 1"
+  },
+  {
+    "question": "Hộ kinh doanh có doanh thu năm trên 01 tỷ đồng có bắt buộc dùng hóa đơn điện tử không?",
+    "expected_answer": "Có. Hộ hoặc cá nhân kinh doanh có doanh thu năm trên 01 tỷ đồng phải dùng hóa đơn điện tử có mã của cơ quan thuế hoặc hóa đơn điện tử từ máy tính tiền kết nối với cơ quan thuế.",
+    "expected_context": "Hộ kinh doanh, cá nhân kinh doanh có doanh thu năm trên 01 tỷ đồng thì phải áp dụng hóa đơn điện tử có mã của cơ quan thuế, hóa đơn điện tử khởi tạo từ máy tính tiền có kết nối dữ liệu với cơ quan thuế.",
+    "source": "nghi-dinh-141-2026-sua-doi-nghi-dinh-68-thue-ho-kinh-doanh.docx — Điều 1"
+  },
+  {
+    "question": "Trong năm doanh thu lũy kế vượt 01 tỷ đồng thì hộ kinh doanh phải đăng ký hóa đơn điện tử trong bao lâu?",
+    "expected_answer": "Phải đăng ký trong vòng 30 ngày kể từ ngày cuối cùng của kỳ tính thuế mà doanh thu lũy kế vượt 01 tỷ đồng.",
+    "expected_context": "Hộ kinh doanh, cá nhân kinh doanh đăng ký sử dụng hóa đơn điện tử trong thời gian 30 ngày kể từ ngày cuối cùng của kỳ tính thuế có doanh thu lũy kế trên 01 tỷ đồng.",
+    "source": "nghi-dinh-141-2026-sua-doi-nghi-dinh-68-thue-ho-kinh-doanh.docx — Điều 1"
+  },
+  {
+    "question": "Ai có trách nhiệm khấu trừ và nộp thuế thay cho giao dịch của hộ, cá nhân trên nền tảng thương mại điện tử có chức năng thanh toán?",
+    "expected_answer": "Tổ chức quản lý sàn giao dịch thương mại điện tử hoặc nền tảng số có chức năng thanh toán, gồm cả tổ chức trong và ngoài nước, thuộc phạm vi khấu trừ và nộp thuế thay.",
+    "expected_context": "Tổ chức là nhà quản lý sàn giao dịch thương mại điện tử, tổ chức là nhà quản lý nền tảng số có chức năng thanh toán ... thuộc đối tượng khấu trừ, nộp thuế thay.",
+    "source": "nghi-dinh-117-2025-thue-thuong-mai-dien-tu.pdf — Điều 1, Điều 2"
+  },
+  {
+    "question": "Hóa đơn điện tử khởi tạo từ máy tính tiền là gì?",
+    "expected_answer": "Đó là hóa đơn hoặc dữ liệu điện tử do người bán lập từ hệ thống tính tiền, có thể có hoặc không có mã của cơ quan thuế, để người mua truy xuất và kê khai; dữ liệu được chuyển tới cơ quan thuế theo định dạng chuẩn.",
+    "expected_context": "Hóa đơn điện tử khởi tạo từ máy tính tiền ... là hóa đơn điện tử có mã của cơ quan thuế hoặc hoá đơn điện tử không có mã ... do tổ chức, cá nhân bán hàng hóa, cung cấp dịch vụ lập từ hệ thống tính tiền, dữ liệu được chuyển đến cơ quan thuế theo định dạng chuẩn dữ liệu.",
+    "source": "nghi-dinh-254-2026-hoa-don-dien-tu.docx — phần giải thích từ ngữ"
+  }
+]

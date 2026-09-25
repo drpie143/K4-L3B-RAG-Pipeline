@@ -12,6 +12,7 @@ chạy lại pipeline không tạo dữ liệu trùng. Task 5 phải dùng chung
 """
 
 import os
+import re
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -25,10 +26,13 @@ load_dotenv()
 STANDARDIZED_DIR = Path(__file__).parent.parent / "data" / "standardized"
 CHROMA_DIR = Path(__file__).parent.parent / "chroma_db"
 
-# Giải thích lựa chọn tham số trong báo cáo nhóm.
-CHUNK_SIZE = 500
-CHUNK_OVERLAP = 50
-CHUNKING_METHOD = "recursive"
+# Văn bản pháp luật và bài báo đã có Markdown heading rõ ràng. Chunk theo
+# Chương/Mục/Điều/section, chỉ tách tiếp theo đoạn hoặc câu khi section quá dài.
+# Heading path được lặp lại để mỗi chunk tự mang đủ ngữ cảnh; nội dung không overlap.
+CHUNK_SIZE = 1800
+CHUNK_OVERLAP = 0
+CHUNKING_METHOD = "markdown_hierarchy"
+EMBEDDING_BATCH_SIZE = 32
 
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "BAAI/bge-m3")
 EMBEDDING_DIM = 1024
@@ -113,29 +117,27 @@ def load_documents() -> list[dict]:
 
 
 def chunk_documents(documents: list[dict]) -> list[dict]:
-    """Chia Document thành chunks có id và chunk_index."""
-    try:
-        from langchain_text_splitters import RecursiveCharacterTextSplitter
-
-        splitter = RecursiveCharacterTextSplitter(
-            chunk_size=CHUNK_SIZE,
-            chunk_overlap=CHUNK_OVERLAP,
-            separators=["\n\n", "\n", ". ", " ", ""],
-        )
-        split_text = splitter.split_text
-    except ImportError:
-        # Fallback giúp contract thuần Python vẫn chạy trước khi cài dependency đầy đủ.
-        split_text = _split_text_fallback
-
+    """Chunk theo cấu trúc Markdown, không dùng sliding-window overlap."""
     chunks = []
     for document in documents:
         validate_document(document)
-        texts = split_text(document["content"])
-        for index, text in enumerate(text for text in texts if text.strip()):
+        sections = _split_markdown_hierarchy(document["content"])
+        for index, section in enumerate(sections):
+            text = section["content"]
+            chunk_metadata = {
+                **document["metadata"],
+                "chunk_index": index,
+                "chunking_method": CHUNKING_METHOD,
+            }
+            if section["heading_path"]:
+                chunk_metadata["heading_path"] = section["heading_path"]
+                chunk_metadata["section"] = section["section"]
+            if section["part"] > 1:
+                chunk_metadata["section_part"] = section["part"]
             chunk = {
                 "id": f"{document['id']}::chunk-{index}",
-                "content": text.strip(),
-                "metadata": {**document["metadata"], "chunk_index": index},
+                "content": text,
+                "metadata": chunk_metadata,
             }
             validate_document(chunk, require_chunk=True)
             chunks.append(chunk)
@@ -144,7 +146,10 @@ def chunk_documents(documents: list[dict]) -> list[dict]:
 
 def embed_chunks(chunks: list[dict]) -> list[dict]:
     """Thêm embedding vào từng chunk."""
-    vectors = embed_texts([chunk["content"] for chunk in chunks])
+    vectors = []
+    for start in range(0, len(chunks), EMBEDDING_BATCH_SIZE):
+        batch = chunks[start : start + EMBEDDING_BATCH_SIZE]
+        vectors.extend(embed_texts([chunk["content"] for chunk in batch]))
     if len(vectors) != len(chunks):
         raise ValueError("embedding provider returned an unexpected vector count")
     return [{**chunk, "embedding": vector} for chunk, vector in zip(chunks, vectors)]
@@ -158,7 +163,14 @@ def index_to_vectorstore(chunks: list[dict]) -> None:
         validate_document(chunk, require_chunk=True)
         if "embedding" not in chunk:
             raise ValueError(f"chunk {chunk['id']} has no embedding")
-    get_collection().upsert(
+    collection = get_collection()
+    current_ids = {chunk["id"] for chunk in chunks}
+    existing_ids = set(collection.get(include=[]).get("ids", []))
+    stale_ids = sorted(existing_ids - current_ids)
+    if stale_ids:
+        collection.delete(ids=stale_ids)
+
+    collection.upsert(
         ids=[chunk["id"] for chunk in chunks],
         documents=[chunk["content"] for chunk in chunks],
         embeddings=[chunk["embedding"] for chunk in chunks],
@@ -184,23 +196,107 @@ def _parse_front_matter(text: str) -> tuple[dict[str, str], str]:
     return metadata, text[marker + 5 :]
 
 
-def _split_text_fallback(text: str) -> list[str]:
-    """Fallback theo ký tự, có overlap; không được dùng để tạo dữ liệu giả."""
-    if len(text) <= CHUNK_SIZE:
-        return [text]
+HEADING_PATTERN = re.compile(r"^(#{1,4})\s+(.+?)\s*$")
+SENTENCE_BOUNDARY = re.compile(r"(?<=[.!?;:])\s+(?=[A-ZÀ-ỸĐ0-9])")
+
+
+def _split_markdown_hierarchy(text: str) -> list[dict]:
+    """Tách Markdown theo heading path rồi chia section dài mà không overlap."""
+    heading_stack: dict[int, str] = {}
+    current_body: list[str] = []
+    current_path: list[str] = []
+    sections: list[tuple[list[str], str]] = []
+
+    def flush() -> None:
+        body = "\n".join(current_body).strip()
+        if body:
+            sections.append((list(current_path), body))
+
+    for line in text.splitlines():
+        heading = HEADING_PATTERN.match(line)
+        if heading:
+            flush()
+            current_body = []
+            level = len(heading.group(1))
+            title = heading.group(2).strip()
+            for old_level in [item for item in heading_stack if item >= level]:
+                del heading_stack[old_level]
+            heading_stack[level] = title
+            current_path = [heading_stack[item] for item in sorted(heading_stack)]
+        else:
+            current_body.append(line)
+    flush()
+
+    # Tài liệu không có heading vẫn được chia theo đoạn/câu.
+    if not sections and text.strip():
+        sections = [([], text.strip())]
+
     chunks = []
-    start = 0
-    while start < len(text):
-        end = min(start + CHUNK_SIZE, len(text))
-        if end < len(text):
-            boundary = max(text.rfind(separator, start, end) for separator in ("\n\n", "\n", ". ", " "))
-            if boundary > start + CHUNK_SIZE // 2:
-                end = boundary + 1
-        chunks.append(text[start:end])
-        if end == len(text):
-            break
-        start = max(end - CHUNK_OVERLAP, start + 1)
+    for heading_path, body in sections:
+        prefix = _heading_prefix(heading_path)
+        body_parts = _split_section_body(body, max(CHUNK_SIZE - len(prefix) - 2, 200))
+        path_label = " > ".join(heading_path)
+        for part_number, body_part in enumerate(body_parts, 1):
+            content = f"{prefix}\n\n{body_part}".strip() if prefix else body_part
+            chunks.append({
+                "content": content,
+                "heading_path": path_label,
+                "section": heading_path[-1] if heading_path else "",
+                "part": part_number,
+            })
     return chunks
+
+
+def _heading_prefix(heading_path: list[str]) -> str:
+    """Khôi phục hierarchy với heading levels ổn định trong từng chunk."""
+    return "\n\n".join(
+        f"{'#' * min(index, 4)} {title}"
+        for index, title in enumerate(heading_path, 1)
+    )
+
+
+def _split_section_body(body: str, budget: int) -> list[str]:
+    """Pack đoạn văn trong budget; đoạn dài được tách theo câu rồi từ."""
+    paragraphs = [paragraph.strip() for paragraph in re.split(r"\n\s*\n", body) if paragraph.strip()]
+    units = []
+    for paragraph in paragraphs:
+        if len(paragraph) <= budget:
+            units.append(paragraph)
+            continue
+        sentences = [item.strip() for item in SENTENCE_BOUNDARY.split(paragraph) if item.strip()]
+        for sentence in sentences:
+            units.extend(_hard_split(sentence, budget))
+
+    packed = []
+    current = ""
+    for unit in units:
+        candidate = f"{current}\n\n{unit}" if current else unit
+        if current and len(candidate) > budget:
+            packed.append(current)
+            current = unit
+        else:
+            current = candidate
+    if current:
+        packed.append(current)
+    return packed or [body[:budget].strip()]
+
+
+def _hard_split(text: str, budget: int) -> list[str]:
+    """Tách một câu cực dài theo từ, không lặp nội dung."""
+    if len(text) <= budget:
+        return [text]
+    parts = []
+    current = ""
+    for word in text.split():
+        candidate = f"{current} {word}" if current else word
+        if current and len(candidate) > budget:
+            parts.append(current)
+            current = word
+        else:
+            current = candidate
+    if current:
+        parts.append(current)
+    return parts
 
 
 def run_pipeline() -> None:

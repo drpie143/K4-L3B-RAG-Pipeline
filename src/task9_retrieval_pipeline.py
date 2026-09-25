@@ -24,7 +24,7 @@ from .task8_pageindex_vectorless import pageindex_search
 load_dotenv()
 
 
-SCORE_THRESHOLD = float(os.getenv("SCORE_THRESHOLD") or "0.3")
+SCORE_THRESHOLD = float(os.getenv("SCORE_THRESHOLD") or "0.55")
 DEFAULT_TOP_K = 5
 
 

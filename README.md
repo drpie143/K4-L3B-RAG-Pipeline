@@ -1,20 +1,24 @@
-# Day 8 — RAG Pipeline
+# RAG Pipeline — Pháp luật cho hộ kinh doanh
 
 ## Mục tiêu
 
-Mỗi nhóm xây dựng một chatbot RAG trả lời câu hỏi từ bộ tài liệu do nhóm thu thập. Sản phẩm phải có hybrid retrieval, citation, giao diện chat và báo cáo đánh giá.
+Chatbot RAG trả lời câu hỏi về đăng ký, thuế, hóa đơn điện tử và thương mại
+điện tử dành cho hộ kinh doanh Việt Nam. Pipeline dùng hybrid retrieval,
+citation và ưu tiên văn bản pháp luật mới hơn khi nguồn có thay đổi theo thời gian.
 
-Nhóm tự chọn bài toán và thu thập dữ liệu phù hợp; repo không cung cấp dữ liệu mẫu.
+Corpus hiện có 7 văn bản pháp luật từ Công báo điện tử và 7 bài hướng dẫn/bài
+báo công khai. Dữ liệu gốc nằm trong `data/landing/`; bản Markdown kèm metadata
+nguồn, ngày ban hành và ngày hiệu lực nằm trong `data/standardized/`.
 
 ## Sản phẩm phải nộp
 
 - Repository nhóm chạy được.
-- Tối thiểu 3 tài liệu chính sách và 5 bài viết/page do nhóm tự thu thập.
+- 7 tài liệu pháp luật và 7 bài viết do nhóm tự thu thập.
 - Pipeline: convert → chunk → index → dense + BM25 → RRF → fallback → generation có citation.
 - Chatbot Streamlit hiển thị câu trả lời và nguồn đã dùng.
 - Golden dataset tối thiểu 15 câu; đánh giá 4 metric và so sánh A/B.
 - `group_project/evaluation/RESULT.md`.
-- Mỗi thành viên nộp báo cáo cá nhân theo template trong `group_project/ịndividual/INDIVIDUAL_REPORT.md`.
+- Mỗi thành viên nộp báo cáo cá nhân trong `reports/`.
 
 ## Quick start
 
@@ -25,6 +29,12 @@ python -m pip install --upgrade pip setuptools wheel
 python -m pip install -e ".[dev]"
 python -m playwright install chromium
 cp .env.example .env
+```
+
+Trên PowerShell dùng:
+
+```powershell
+Copy-Item .env.example .env
 ```
 
 Điền API key cần dùng trong `.env`; không commit file này.
@@ -42,6 +52,28 @@ pytest -q
 # 3. Chạy sản phẩm
 streamlit run app.py
 ```
+
+## Thiết kế retrieval hiện tại
+
+- Chunk theo hierarchy Markdown `văn bản → chương → mục → điều → đoạn`, không
+  dùng sliding-window overlap. Section dài mới được chia tiếp theo đoạn/câu.
+- Embedding mặc định: `BAAI/bge-m3`; ChromaDB dùng cosine distance.
+- BM25 và dense retrieval dùng chung 526 chunks; RRF hợp nhất theo ID đúng một lần.
+- Threshold fallback được hiệu chỉnh ở `0.55` từ 15 câu in-domain và 5 câu
+  out-of-domain. Kết quả chi tiết ở
+  `group_project/evaluation/retrieval_results.json`.
+- OpenAI generation dùng Responses API và model `gpt-5-mini`; câu trả lời phải
+  có citation `[S#]`, nếu evidence không đủ hoặc provider lỗi sẽ từ chối an toàn.
+
+Kết quả retrieval hiện tại (`top_k=5`):
+
+| Cấu hình | Hit@5 | MRR@5 | Context token recall | Latency trung bình |
+|---|---:|---:|---:|---:|
+| Dense | 1.000 | 0.806 | 0.987 | 125 ms |
+| Hybrid + RRF | 1.000 | 0.889 | 0.987 | 131 ms |
+
+Các số liệu generation/RAGAS chỉ được điền sau khi chạy bằng API key hợp lệ;
+không dùng kết quả giả để hoàn thành báo cáo.
 
 ## Lộ trình 3 giờ
 

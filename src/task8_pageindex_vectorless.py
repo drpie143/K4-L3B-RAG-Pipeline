@@ -29,10 +29,12 @@ load_dotenv()
 
 DOC_ID_CACHE = Path(__file__).parent.parent / "pageindex_doc_ids.json"
 PDF_DIR = Path(__file__).parent.parent / "pageindex_pdfs"
-HTTP_TIMEOUT_SECONDS = 30
-POLL_TIMEOUT_SECONDS = 45
-POLL_INTERVAL_SECONDS = 2
+HTTP_TIMEOUT_SECONDS = float(os.getenv("PAGEINDEX_HTTP_TIMEOUT", "60"))
+POLL_TIMEOUT_SECONDS = float(os.getenv("PAGEINDEX_POLL_TIMEOUT", "600"))
+POLL_INTERVAL_SECONDS = float(os.getenv("PAGEINDEX_POLL_INTERVAL", "3"))
 _FONT_CANDIDATES = (
+    Path("C:/Windows/Fonts/arial.ttf"),
+    Path("C:/Windows/Fonts/segoeui.ttf"),
     Path("/System/Library/Fonts/Supplemental/Arial Unicode.ttf"),
     Path("/Library/Fonts/Arial Unicode.ttf"),
     Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"),
@@ -299,10 +301,12 @@ def _load_cache() -> dict:
 
 
 def _save_cache(cache: dict) -> None:
-    DOC_ID_CACHE.write_text(
+    temporary = DOC_ID_CACHE.with_suffix(".tmp")
+    temporary.write_text(
         json.dumps(cache, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+    temporary.replace(DOC_ID_CACHE)
 
 
 @contextmanager
