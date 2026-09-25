@@ -1,74 +1,53 @@
+"""Chatbot RAG — Pháp luật cho hộ kinh doanh.
+
+Chạy: streamlit run app.py
+
+Giao diện gồm 3 trang (Chatbot, Đánh giá, Kho tài liệu) trong thư mục ui/.
+Mọi lời gọi backend đi qua ui/backend.py; xem docstring file đó để biết
+cách nối pipeline RAG thật vào giao diện.
+"""
+
 import streamlit as st
 from dotenv import load_dotenv
 
-from src.task10_generation import generate_with_citation
+from ui import backend
+from ui.page_chat import chat_page
+from ui.page_corpus import corpus_page
+from ui.page_evaluation import evaluation_page
+from ui.theme import inject_css
 
 
 load_dotenv()
 
 st.set_page_config(
-    page_title="RAG Pháp luật hộ kinh doanh",
-    page_icon="💬",
+    page_title="Trợ lý Pháp luật Hộ kinh doanh",
+    page_icon="⚖️",
     layout="wide",
 )
+inject_css()
 
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+navigation = st.navigation(
+    [
+        st.Page(chat_page, title="Chatbot", icon=":material/forum:", default=True),
+        st.Page(evaluation_page, title="Đánh giá", icon=":material/monitoring:", url_path="evaluation"),
+        st.Page(corpus_page, title="Kho tài liệu", icon=":material/library_books:", url_path="corpus"),
+    ],
+    position="top",
+)
 
 with st.sidebar:
-    st.title("Pháp luật hộ kinh doanh")
-    st.caption("Nguồn: văn bản pháp luật và bài hướng dẫn đã được nhóm thu thập.")
-    top_k = st.slider("Số chunks", 3, 10, 5)
+    st.markdown("### :material/balance: Pháp luật Hộ kinh doanh")
+    st.caption("Chatbot RAG · hybrid retrieval (dense + BM25 + RRF) · trả lời có citation")
+    status = {
+        "real": (":green[:material/check_circle:]", "Đang dùng backend RAG thật"),
+        "demo": (":orange[:material/science:]", "Chế độ demo · dữ liệu mẫu"),
+        "unknown": (":gray[:material/sync:]", "Tự động · dùng backend khi sẵn sàng"),
+    }[backend.backend_mode()]
+    st.caption(f"{status[0]} {status[1]}")
+    st.divider()
 
-st.title("Trợ lý pháp luật cho hộ kinh doanh")
-st.caption("Câu trả lời chỉ được tạo từ các nguồn đã index và luôn kèm citation.")
+navigation.run()
 
-
-def show_sources(sources: list[dict]) -> None:
-    """Hiển thị nguồn retrieval theo cách có thể kiểm chứng."""
-    if not sources:
-        return
-    with st.expander(f"Nguồn đã dùng ({len(sources)})"):
-        for index, source in enumerate(sources, 1):
-            metadata = source["metadata"]
-            st.markdown(f"**[S{index}] {metadata['title']}**")
-            if metadata.get("url"):
-                st.markdown(f"[{metadata['source']}]({metadata['url']})")
-            else:
-                st.caption(metadata["source"])
-            st.caption(
-                f"Method: {source['retrieval_method']} · Score: {source['score']:.4f}"
-            )
-            st.text(source["content"][:500])
-
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
-        show_sources(message.get("sources", []))
-
-query = st.chat_input("Nhập câu hỏi...")
-
-if query:
-    st.session_state.messages.append({"role": "user", "content": query})
-
-    with st.chat_message("user"):
-        st.markdown(query)
-
-    with st.chat_message("assistant"):
-        with st.spinner("Đang tìm nguồn và tạo câu trả lời..."):
-            try:
-                result = generate_with_citation(query, top_k=top_k)
-            except Exception as error:
-                result = {
-                    "answer": f"Không thể xử lý yêu cầu lúc này: {error}",
-                    "sources": [],
-                    "retrieval_source": "none",
-                }
-        st.markdown(result["answer"])
-        show_sources(result["sources"])
-
-    st.session_state.messages.append({
-        "role": "assistant",
-        "content": result["answer"],
-        "sources": result["sources"],
-    })
+with st.sidebar:
+    st.divider()
+    st.caption("Dữ liệu cập nhật đến 09/2026 · Nguồn: Công báo điện tử, Báo Chính phủ, VnExpress")
