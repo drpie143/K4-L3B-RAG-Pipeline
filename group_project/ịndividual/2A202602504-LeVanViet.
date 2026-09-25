@@ -1,0 +1,44 @@
+# Individual contribution report
+
+## Thông tin
+
+- Họ và tên: Lê Văn Việt
+- Mã học viên: 2A202602504
+- Nhóm: THE LIEMS
+- Repository/branch: `drpie143/K4-L3B-RAG-Pipeline` / `viet-02504`
+
+## Phần việc đã thực hiện
+
+| Module/deliverable | Việc tôi trực tiếp làm | File/commit/PR | Trạng thái |
+|---|---|---|---|
+| PageIndex fallback (Task 8) | Upload Markdown đã chuẩn hóa sang PDF, cache `doc_id`, query retrieval và map node về `SearchResult` với `retrieval_method="pageindex"` | `src/task8_pageindex_vectorless.py`, commit `202dc80` | Done |
+
+Chỉ phần Task 8. Task 9 đã gọi `pageindex_search` khi cosine score dense thấp hơn threshold và nuốt lỗi provider để giữ kết quả hybrid.
+
+## Quyết định kỹ thuật quan trọng
+
+1. **Quyết định:** SDK `pageindex==0.2.8` chỉ nhận PDF, nên convert Markdown sang PDF Unicode rồi cache `doc_id` kèm SHA-256 của nội dung trong `pageindex_doc_ids.json`.
+   **Lý do/evidence:** `PageIndexClient.submit_document` nhận `file_path` PDF và trả `doc_id`. Hash đổi mới upload lại; file cache nằm trong `.gitignore`.
+   **Trade-off:** Không upload lại mỗi query, nhưng PDF tạm làm mất layout bản gốc. Lập chỉ mục cloud tốn credit và phải chờ `is_retrieval_ready`.
+
+2. **Quyết định:** Bọc mọi request của SDK bằng timeout, poll `get_retrieval` tới khi `status` hoàn tất, và parse `retrieved_nodes[].relevant_contents`.
+   **Lý do/evidence:** SDK 0.2 không có tham số timeout. Response retrieval dùng `retrieved_nodes` và `relevant_content` / `page_index`. Không có score thì gán điểm theo thứ hạng, rồi `validate_search_results`. Thiếu `PAGEINDEX_API_KEY`, timeout hoặc lỗi toàn bộ document thì ném exception để Task 9 giữ hybrid.
+   **Trade-off:** Pipeline không sập khi PageIndex lỗi, nhưng điểm fallback không phải xác suất relevance. Poll mặc định tới 600 giây (`PAGEINDEX_POLL_TIMEOUT`).
+
+## Kiểm thử và kết quả
+
+- Test hoặc query tôi đã dùng: `python -m pytest tests/test_contracts.py -q`. Contract kiểm tra chữ ký `pageindex_search(query, top_k)` và không gọi API thật.
+- Kết quả trước/sau nếu có: trước khi làm, `upload_documents` và `pageindex_search` raise `NotImplementedError`. Sau đó 15/15 contract tests pass.
+- Lỗi đã phát hiện và cách xử lý: một document lỗi bị bỏ qua nếu document khác còn kết quả; chỉ raise khi không có kết quả nào. Node trùng `node_id` bị loại. Content rỗng không đưa vào `SearchResult`.
+
+## Điều còn hạn chế
+
+- Một hạn chế cụ thể của phần tôi làm: chưa có một lượt retrieval cloud thành công để đối chiếu field thật của `get_retrieval` trên corpus hộ kinh doanh. Parser dựa trên schema `retrieved_nodes` / `relevant_contents` của API.
+- Nếu có thêm thời gian, thay đổi đầu tiên tôi sẽ thực hiện: chạy `python -m src.task8_pageindex_vectorless` với `PAGEINDEX_API_KEY` hợp lệ, lưu cache `doc_id`, rồi hỏi một câu in-domain và một câu ngoài domain để xem fallback có trả `pageindex` đúng nguồn.
+
+## Xác nhận đóng góp
+
+Tôi xác nhận nội dung trên phản ánh đúng phần việc của mình và có thể giải thích hoặc chạy lại trong buổi demo.
+
+- Ngày: 25/09/2026
+- Tên thành viên:
