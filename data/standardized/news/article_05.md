@@ -1,0 +1,68 @@
+---
+title: "Quy định quản lý thuế đối với kinh doanh trên nền tảng thương mại điện tử"
+source: "article_05.json"
+doc_type: "news"
+url: "https://baochinhphu.vn/quy-dinh-quan-ly-thue-doi-voi-ho-ca-nhan-kinh-doanh-tren-nen-tang-thuong-mai-dien-tu-102250611153921023.htm"
+date_published: "2025-06-11T16:37:00+07:00"
+date_crawled: "2026-09-25T04:27:05+00:00"
+---
+
+# Quy định quản lý thuế đối với kinh doanh trên nền tảng thương mại điện tử
+
+(Chinhphu.vn) - Chính phủ vừa ban hành Nghị định số 117/2025/NĐ-CP quy định quản lý thuế đối với hoạt động kinh doanh trên nền tảng thương mại điện tử, nền tảng số của hộ, cá nhân.
+
+## Đối tượng áp dụng
+
+Nghị định quy định đối tượng áp dụng bao gồm:
+
+1- Tổ chức là nhà quản lý sàn giao dịch thương mại điện tử, tổ chức là nhà quản lý nền tảng số có chức năng thanh toán và các tổ chức có hoạt động kinh tế số khác thuộc đối tượng khấu trừ, nộp thuế thay.
+
+2- Hộ, cá nhân cư trú và cá nhân không cư trú có hoạt động kinh doanh trên nền tảng thương mại điện tử, nền tảng số.
+
+3- Cơ quan quản lý thuế và các tổ chức, cá nhân có liên quan.
+
+## Khấu trừ, nộp thuế thay
+
+Theo Nghị định, tổ chức quản lý nền tảng thương mại điện tử trong và ngoài nước thuộc đối tượng khấu trừ, nộp thuế thay (bao gồm chủ sở hữu trực tiếp quản lý nền tảng thương mại điện tử hoặc người được ủy quyền quản lý nền tảng thương mại điện tử) thực hiện khấu trừ, nộp thuế thay số thuế giá trị gia tăng phải nộp theo quy định của pháp luật thuế giá trị gia tăng đối với mỗi giao dịch cung cấp hàng hóa, dịch vụ phát sinh doanh thu ở trong nước của hộ, cá nhân có hoạt động kinh doanh trên nền tảng thương mại điện tử.
+
+Tổ chức quản lý nền tảng thương mại điện tử trong và ngoài nước thuộc đối tượng khấu trừ, nộp thuế thay (bao gồm chủ sở hữu trực tiếp quản lý nền tảng thương mại điện tử hoặc người được ủy quyền quản lý nền tảng thương mại điện tử) thực hiện khấu trừ, nộp thuế thay hộ, cá nhân cư trú số thuế thu nhập cá nhân phải nộp theo quy định của pháp luật thuế thu nhập cá nhân đối với mỗi giao dịch cung cấp hàng hóa, dịch vụ phát sinh doanh thu trong và ngoài nước của cá nhân cư trú có hoạt động kinh doanh trên nền tảng thương mại điện tử; thực hiện khấu trừ, nộp thuế thay hộ, cá nhân không cư trú số thuế thu nhập cá nhân phải nộp theo quy định của pháp luật thuế thu nhập cá nhân đối với mỗi giao dịch cung cấp hàng hóa, dịch vụ phát sinh doanh thu trong nước của cá nhân không cư trú có hoạt động kinh doanh trên nền tảng thương mại điện tử.
+
+## Thời điểm thực hiện khấu trừ, xác định số thuế phải khấu trừ
+
+Về thời điểm thực hiện khấu trừ, Nghị định quy định: Tổ chức quản lý nền tảng thương mại điện tử thực hiện khấu trừ số thuế giá trị gia tăng, số thuế thu nhập cá nhân phải nộp đối với mỗi giao dịch cung cấp hàng hóa, dịch vụ phát sinh doanh thu trên nền tảng thương mại điện tử thuộc phạm vi quản lý ngay khi xác nhận giao dịch thành công và chấp nhận thanh toán đối với giao dịch bán hàng hóa, dịch vụ trên nền tảng thương mại điện tử cho hộ, cá nhân.
+
+Số thuế giá trị gia tăng, số thuế thu nhập cá nhân phải thực hiện khấu trừ được xác định theo tỷ lệ phần trăm (%) trên doanh thu của mỗi giao dịch bán hàng hóa, cung cấp dịch vụ.
+
+Tỷ lệ % tính **thuế giá trị gia tăng** thực hiện theo quy định của Luật Thuế giá trị gia tăng như sau: Hàng hóa: 1%; dịch vụ: 5%; vận tải, dịch vụ có gắn với hàng hóa: 3%.
+
+Tỷ lệ % tính **thuế thu nhập cá nhân** thực hiện theo quy định của Luật Thuế thu nhập cá nhân như sau:
+
+- Đối với cá nhân cư trú: Hàng hóa: 0,5%; dịch vụ: 2%; vận tải, dịch vụ có gắn với hàng hóa: 1,5%.
+
+- Đối với cá nhân không cư trú: Hàng hóa: 1%; dịch vụ: 5%; vận tải, dịch vụ có gắn với hàng hóa: 2%.
+
+Trường hợp các tổ chức quản lý nền tảng thương mại điện tử thuộc đối tượng khấu trừ, nộp thay không xác định được giao dịch phát sinh doanh thu từ nền tảng thương mại điện tử là hàng hóa hay dịch vụ hoặc loại dịch vụ thì việc xác định số thuế phải khấu trừ thực hiện theo mức tỷ lệ % cao nhất.
+
+Doanh thu của mỗi giao dịch bán hàng hóa, cung cấp dịch vụ là số tiền bán hàng hóa, dịch vụ của hộ, cá nhân được hưởng mà tổ chức quản lý nền tảng thương mại điện tử thu hộ.
+
+## Cách thức kê khai và nộp số thuế đã khấu trừ
+
+Các tổ chức quản lý nền tảng thương mại điện tử thực hiện kê khai số thuế đã khấu trừ theo tháng.
+
+Đối với giao dịch bị hủy hoặc trả lại hàng thì tổ chức quản lý nền tảng thương mại điện tử thực hiện bù trừ số thuế đã khấu trừ, nộp thay của giao dịch bị hủy hoặc trả lại hàng với số thuế phải khấu trừ, nộp thay của các giao dịch bán hàng hóa, cung cấp dịch vụ.
+
+Số thuế nộp thay của tổ chức quản lý nền tảng thương mại điện tử được xác định bằng tổng số thuế của các giao dịch bán hàng hóa, cung cấp dịch vụ sau khi bù trừ với tổng số thuế các giao dịch bị hủy hoặc trả lại hàng của hộ, cá nhân (nếu có).
+
+### Trách nhiệm của hộ, cá nhân có hoạt động kinh doanh trên nền tảng thưong mại điện tử
+
+Nghị định quy định, hộ, cá nhân cư trú có hoạt động kinh doanh trên nền tảng thương mại điện tử có trách nhiệm kê khai và nộp thuế tiêu thụ đặc biệt, thuế bảo vệ môi trường, thuế tài nguyên và các khoản thu khác phải nộp ngân sách nhà nước do cơ quan thuế quản lý thu theo quy định của pháp luật về thuế, pháp luật về quản lý thuế và pháp luật khác có liên quan.
+
+Hộ, cá nhân có hoạt động kinh doanh trên nền tảng thương mại điện tử có trách nhiệm cung cấp đầy đủ, chính xác thông tin mã số thuế hoặc số định danh cá nhân (đối với công dân Việt Nam); số hộ chiếu hoặc thông tin định danh do cơ quan có thẩm quyền nước ngoài cấp (đối với công dân nước ngoài) và các thông tin bắt buộc đối với người bán theo quy định của pháp luật về thương mại điện tử cho tổ chức quản lý nền tảng thương mại điện tử.
+
+Cung cấp chính xác, đầy đủ, kịp thời thông tin, tài liệu liên quan đến việc xác định nghĩa vụ thuế phải nộp cho các tổ chức quản lý nền tảng thương mại điện tử thuộc đối tượng khấu trừ, nộp thuế thay và chịu trách nhiệm thực hiện nghĩa vụ thuế theo quy định.
+
+Hộ, cá nhân đã được tổ chức quản lý nền tảng thương mại điện tử khấu trừ, kê khai, nộp thay số thuế giá trị gia tăng, số thuế thu nhập cá nhân theo quy định tại Nghị định này thì không phải khai, nộp thuế giá trị gia tăng, thuế thu nhập cá nhân đối với các hoạt động kinh doanh trên nền tảng thương mại điện tử đã khấu trừ, nộp thuế thay.
+
+Nghị định này có hiệu lực thi hành từ 1/7/2025.
+
+**Minh Hiển**
