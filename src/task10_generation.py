@@ -88,7 +88,8 @@ def call_llm(system_prompt: str, user_message: str) -> str:
             model=LLM_MODEL,
             instructions=system_prompt,
             input=user_message,
-            max_output_tokens=1000,
+            max_output_tokens=1600,
+            reasoning={"effort": os.getenv("OPENAI_REASONING_EFFORT", "low")},
             store=False,
         )
         return response.output_text.strip()

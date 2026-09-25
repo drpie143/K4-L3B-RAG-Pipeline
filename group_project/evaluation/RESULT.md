@@ -5,9 +5,9 @@
 | Field                              | Value |
 | ---------------------------------- | ----- |
 | Evaluation date                    | 2026-09-25 |
-| Framework and version              | Retrieval evaluator nội bộ; RAGAS 0.4.3 đã chuẩn bị nhưng chưa chạy |
-| Evaluator model                    | `gpt-5-mini` — chưa chạy do API key bị vô hiệu hóa |
-| Generator model                    | `gpt-5-mini` — chưa chạy do API key bị vô hiệu hóa |
+| Framework and version              | Retrieval evaluator nội bộ; RAGAS 0.4.3 |
+| Evaluator model                    | `gpt-4o-mini` |
+| Generator model                    | `gpt-5-mini` (reasoning effort `low`) |
 | Embedding model                    | `BAAI/bge-m3` |
 | Corpus version/commit              | `d61ae1608bc9f3fb4e6473520bde4540844850cf` |
 | Golden dataset size                | 15 grounded cases |
@@ -25,15 +25,14 @@ Hai config phải dùng cùng golden dataset, generator, evaluator, prompt và `
 
 | Metric            | Config A | Config B | Delta B−A |
 | ----------------- | -------: | -------: | --------: |
-| Faithfulness      | Chưa chạy | Chưa chạy | N/A |
-| Answer relevance  | Chưa chạy | Chưa chạy | N/A |
-| Context recall    | Chưa chạy | Chưa chạy | N/A |
-| Context precision | Chưa chạy | Chưa chạy | N/A |
-| **Average**       | Chưa chạy | Chưa chạy | N/A |
+| Faithfulness      | 0.967 | 0.939 | -0.028 |
+| Answer relevance  | 0.527 | 0.532 | +0.006 |
+| Context recall    | 0.933 | 0.933 | 0.000 |
+| Context precision | 1.000 | 0.977 | -0.023 |
+| **Average**       | **0.857** | **0.845** | **-0.011** |
 
-Không điền số giả cho bốn LLM-based metrics. Script
-`group_project/evaluation/evaluate_rag.py` đã sẵn sàng; lần chạy ngày 2026-09-25
-bị chặn vì OpenAI trả `401 token_invalidated`.
+Kết quả được chạy thật trên 15 câu cho mỗi cấu hình (30 case), lưu đầy đủ tại
+`group_project/evaluation/ragas_results.json`; không dùng mock data hoặc điểm giả.
 
 ### Retrieval scores đã đo được
 
@@ -46,25 +45,29 @@ bị chặn vì OpenAI trả `401 token_invalidated`.
 
 ## A/B comparison
 
-- Cấu hình tốt hơn ở retrieval: hybrid + RRF.
-- Evidence: giữ nguyên Hit@5 100% nhưng tăng MRR@5 từ 0.806 lên 0.889 trên cùng 15 câu.
-- Trade-off về latency/cost: tăng khoảng 6 ms/query trên máy đánh giá; BM25 chạy local nên không tăng API cost.
+- Hybrid + RRF tốt hơn ở thứ hạng retrieval: giữ Hit@5 100% và tăng MRR@5 từ
+  0.806 lên 0.889 trên cùng 15 câu.
+- Dense tốt hơn nhẹ ở trung bình RAGAS (0.857 so với 0.845), chủ yếu nhờ
+  faithfulness và context precision. Hybrid chỉ tăng answer relevance 0.006.
+- Trade-off của hybrid: tăng khoảng 6 ms/query trên máy đánh giá; BM25 chạy local
+  nên không tăng API cost. Với corpus hiện tại, nên giữ hybrid cho khả năng xếp
+  đúng nguồn nhưng tiếp tục lọc context trước generation.
 
 ## Worst performers
 
 |   # | Question | Config | Faithfulness | Relevance | Recall | Precision | Failure stage             | Root cause |
 | --: | -------- | ------ | -----------: | --------: | -----: | --------: | ------------------------- | ---------- |
-|   1 | Ai chịu trách nhiệm khấu trừ thuế trên nền tảng có thanh toán? | Hybrid | Chưa chạy | Chưa chạy | 0.931 token proxy | Chưa chạy | retrieval | Context cần ghép Điều 1 và Điều 2 của cùng văn bản |
-|   2 | Đăng ký hộ kinh doanh qua mạng dùng tài khoản nào? | Hybrid | Chưa chạy | Chưa chạy | 0.966 token proxy | Chưa chạy | retrieval | Evidence ngắn, một số từ trong expected context không lặp nguyên dạng |
-|   3 | Tạm ngừng từ bao nhiêu ngày và tối đa bao lâu? | Hybrid | Chưa chạy | Chưa chạy | 0.971 token proxy | Chưa chạy | retrieval | Một điều dài được chia thành nhiều part |
+|   1 | Nghị định 141/2026 thay ngưỡng 500 triệu thành mức nào? | Dense/Hybrid | 0.500 | 0.559/0.559 | 1.000 | 1.000 | evaluation | Câu trả lời khớp reference nhưng trích hai nguồn tương đương; cần kiểm tra độ ổn định của LLM judge |
+|   2 | Ủy quyền làm thủ tục có bắt buộc công chứng, chứng thực không? | Hybrid | 0.750 | 0.834 | 0.500 | 1.000 | retrieval + generation | Câu trả lời thêm diễn giải về văn bản sửa đổi ngoài ý chính của reference |
+|   3 | Doanh thu trên 01 tỷ có bắt buộc dùng hóa đơn điện tử không? | Dense/Hybrid | 1.000 | 0.509/0.549 | 0.500 | 1.000 | retrieval + generation | Câu trả lời thêm thời hạn 30 ngày; evidence liên quan nằm ở nhiều văn bản |
 
 ## Recommendations
 
 | Priority | Action | Evidence from failure analysis | Expected impact | How to verify |
 | -------: | ------ | ------------------------------ | --------------- | ------------- |
-|        1 | Thay OpenAI API key hợp lệ và chạy `evaluate_rag.py` | Bốn LLM-based metrics chưa có số | Hoàn thành báo cáo generation | File `ragas_results.json` có đủ 30 case A/B |
-|        2 | Giữ chunk theo Điều nhưng đánh giá thêm các section nhiều part | Ba case recall proxy thấp nhất thuộc section dài/đa điều | Tăng context recall/precision | So sánh retrieval trước/sau trên cùng golden set |
-|        3 | Thêm test ưu tiên văn bản sửa đổi mới hơn bài báo cũ | Corpus có cả ngưỡng 500 triệu và 01 tỷ | Giảm câu trả lời lỗi thời | Query ngưỡng thuế phải cite Nghị định 141/2026 |
+|        1 | Thêm bước lọc/rerank top-5 sau RRF theo văn bản và điều khoản | Hybrid context precision 0.977, thấp hơn dense 1.000 | Giữ lợi thế MRR nhưng giảm context nhiễu | Rerun cùng 30 case; precision ≥ dense và MRR không giảm |
+|        2 | Bổ sung liên kết các chunk cùng Điều cho câu có quy tắc và ngoại lệ | Hai case context recall chỉ đạt 0.500 | Tăng recall mà không tăng `top_k` toàn cục | Hai case 5 và 12 đạt recall > 0.5 |
+|        3 | Tránh citation trùng nghĩa và chạy LLM judge lặp để kiểm tra độ ổn định | Case 11 khớp reference nhưng faithfulness chỉ 0.500 ở cả hai config | Phân biệt lỗi generation với nhiễu evaluator | Chấm case 11 ba lần và báo median/độ lệch |
 
 ## Bonus experiments
 

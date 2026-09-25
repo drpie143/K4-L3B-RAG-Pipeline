@@ -16,6 +16,7 @@ load_dotenv()
 
 GOLDEN_PATH = Path(__file__).with_name("golden_dataset.json")
 OUTPUT_PATH = Path(__file__).with_name("ragas_results.json")
+GENERATION_CACHE_PATH = Path(__file__).with_name("rag_generation_cache.json")
 TOP_K = 5
 
 
@@ -31,7 +32,13 @@ def _build_rows(golden: list[dict], hybrid: bool) -> list[dict]:
     rows = []
     for index, item in enumerate(golden, 1):
         chunks = _retrieve(item["question"], hybrid=hybrid)
-        generated = generate_from_chunks(item["question"], chunks)
+        generated = None
+        for attempt in range(3):
+            generated = generate_from_chunks(item["question"], chunks)
+            if generated["retrieval_source"] != "none":
+                break
+            print(f"Retrying generation for case {index} ({attempt + 1}/3)")
+        assert generated is not None
         if generated["retrieval_source"] == "none":
             raise RuntimeError(
                 f"Generation failed for case {index}; verify LLM_MODEL and API key"
@@ -58,7 +65,7 @@ def _evaluate(rows: list[dict]) -> tuple[dict, list[dict]]:
         faithfulness,
     )
 
-    model = os.getenv("LLM_MODEL", "gpt-5-mini")
+    model = os.getenv("RAGAS_LLM_MODEL", "gpt-4o-mini")
     evaluator = LangchainLLMWrapper(
         ChatOpenAI(model=model, timeout=60, max_retries=2)
     )
@@ -85,9 +92,24 @@ def main() -> None:
     if not os.getenv("OPENAI_API_KEY", "").strip():
         raise RuntimeError("OPENAI_API_KEY is not configured")
     golden = json.loads(GOLDEN_PATH.read_text(encoding="utf-8"))
+    cache = (
+        json.loads(GENERATION_CACHE_PATH.read_text(encoding="utf-8"))
+        if GENERATION_CACHE_PATH.is_file()
+        else {}
+    )
     output = {"top_k": TOP_K, "golden_size": len(golden), "configs": {}}
     for name, hybrid in (("dense", False), ("hybrid_rrf", True)):
-        rows = _build_rows(golden, hybrid=hybrid)
+        rows = cache.get(name)
+        expected_questions = [item["question"] for item in golden]
+        if not isinstance(rows, list) or [row.get("user_input") for row in rows] != expected_questions:
+            rows = _build_rows(golden, hybrid=hybrid)
+            cache[name] = rows
+            GENERATION_CACHE_PATH.write_text(
+                json.dumps(cache, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+        else:
+            print(f"Loaded {len(rows)} cached generations ({name})")
         aggregate, cases = _evaluate(rows)
         output["configs"][name] = {"aggregate": aggregate, "cases": cases}
         OUTPUT_PATH.write_text(

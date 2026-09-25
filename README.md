@@ -72,8 +72,16 @@ Kết quả retrieval hiện tại (`top_k=5`):
 | Dense | 1.000 | 0.806 | 0.987 | 125 ms |
 | Hybrid + RRF | 1.000 | 0.889 | 0.987 | 131 ms |
 
-Các số liệu generation/RAGAS chỉ được điền sau khi chạy bằng API key hợp lệ;
-không dùng kết quả giả để hoàn thành báo cáo.
+Kết quả generation/RAGAS thật trên 15 câu × 2 cấu hình:
+
+| Cấu hình | Faithfulness | Answer relevance | Context recall | Context precision |
+|---|---:|---:|---:|---:|
+| Dense | 0.967 | 0.527 | 0.933 | 1.000 |
+| Hybrid + RRF | 0.939 | 0.532 | 0.933 | 0.977 |
+
+Chi tiết 30 case nằm trong `group_project/evaluation/ragas_results.json`. Task 8
+đã được kiểm tra bằng PageIndex Cloud thật trên 14 tài liệu; cache document ID và
+retry polling giúp tránh upload lại hoặc làm hỏng pipeline khi mạng chập chờn.
 
 ## Lộ trình 3 giờ
 

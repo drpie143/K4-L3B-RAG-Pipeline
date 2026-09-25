@@ -30,6 +30,7 @@ load_dotenv()
 DOC_ID_CACHE = Path(__file__).parent.parent / "pageindex_doc_ids.json"
 PDF_DIR = Path(__file__).parent.parent / "pageindex_pdfs"
 HTTP_TIMEOUT_SECONDS = float(os.getenv("PAGEINDEX_HTTP_TIMEOUT", "60"))
+HTTP_RETRIES = int(os.getenv("PAGEINDEX_HTTP_RETRIES", "3"))
 POLL_TIMEOUT_SECONDS = float(os.getenv("PAGEINDEX_POLL_TIMEOUT", "600"))
 POLL_INTERVAL_SECONDS = float(os.getenv("PAGEINDEX_POLL_INTERVAL", "3"))
 _FONT_CANDIDATES = (
@@ -39,6 +40,7 @@ _FONT_CANDIDATES = (
     Path("/Library/Fonts/Arial Unicode.ttf"),
     Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"),
 )
+PDF_RENDERER_VERSION = "2"
 
 
 def upload_documents() -> None:
@@ -196,18 +198,34 @@ def _node_content(node: dict) -> tuple[str, int | None]:
         snippets = node.get("relevant_content")
     parts: list[str] = []
     page_index = node.get("page_index") if isinstance(node.get("page_index"), int) else None
-    if isinstance(snippets, str) and snippets.strip():
-        parts.append(snippets.strip())
-    elif isinstance(snippets, list):
-        for item in snippets:
-            if isinstance(item, str) and item.strip():
-                parts.append(item.strip())
-            elif isinstance(item, dict):
-                text = item.get("relevant_content") or item.get("content") or item.get("text") or ""
-                if isinstance(text, str) and text.strip():
-                    parts.append(text.strip())
-                if page_index is None and isinstance(item.get("page_index"), int):
-                    page_index = item["page_index"]
+    def collect(value) -> None:
+        nonlocal page_index
+        if isinstance(value, str):
+            if value.strip():
+                parts.append(value.strip())
+            return
+        if isinstance(value, list):
+            for item in value:
+                collect(item)
+            return
+        if not isinstance(value, dict):
+            return
+
+        text = value.get("relevant_content") or value.get("content") or value.get("text")
+        if isinstance(text, str) and text.strip():
+            parts.append(text.strip())
+        elif isinstance(text, (list, dict)):
+            collect(text)
+
+        if page_index is None and isinstance(value.get("page_index"), int):
+            page_index = value["page_index"]
+        physical_index = value.get("physical_index")
+        if page_index is None and isinstance(physical_index, str):
+            digits = "".join(character for character in physical_index if character.isdigit())
+            if digits:
+                page_index = int(digits)
+
+    collect(snippets)
     if not parts:
         for key in ("text", "content", "summary"):
             value = node.get(key)
@@ -253,6 +271,7 @@ def _dedupe_and_rank(results: list[dict], top_k: int) -> list[dict]:
 def _document_digest(document: dict) -> str:
     metadata = document["metadata"]
     payload = "\n".join([
+        PDF_RENDERER_VERSION,
         metadata["source"],
         metadata["title"],
         metadata["doc_type"],
@@ -274,6 +293,7 @@ def _pdf_path(document_id: str) -> Path:
 
 def _write_pdf(text: str, dest: Path) -> None:
     from fpdf import FPDF
+    from fpdf.enums import XPos, YPos
 
     font = next((path for path in _FONT_CANDIDATES if path.is_file()), None)
     if font is None:
@@ -286,7 +306,14 @@ def _write_pdf(text: str, dest: Path) -> None:
     pdf.add_font("Body", "", str(font))
     pdf.set_font("Body", size=11)
     for paragraph in text.splitlines() or [text]:
-        pdf.multi_cell(pdf.epw, 6, paragraph if paragraph else " ", wrapmode="CHAR")
+        pdf.multi_cell(
+            pdf.epw,
+            6,
+            paragraph if paragraph else " ",
+            new_x=XPos.LMARGIN,
+            new_y=YPos.NEXT,
+            wrapmode="CHAR",
+        )
     pdf.output(str(dest))
 
 
@@ -311,12 +338,20 @@ def _save_cache(cache: dict) -> None:
 
 @contextmanager
 def _http_timeout(seconds: float):
-    """SDK 0.2 không nhận timeout, nên gắn timeout vào mọi request của nó."""
+    """Gắn timeout và retry GET/HEAD vì SDK 0.2 chưa hỗ trợ hai cơ chế này."""
     original = requests.sessions.Session.request
 
     def request(self, method, url, **kwargs):
         kwargs.setdefault("timeout", seconds)
-        return original(self, method, url, **kwargs)
+        attempts = HTTP_RETRIES + 1 if str(method).upper() in {"GET", "HEAD"} else 1
+        for attempt in range(attempts):
+            try:
+                return original(self, method, url, **kwargs)
+            except requests.RequestException:
+                if attempt + 1 >= attempts:
+                    raise
+                time.sleep(min(2 ** attempt, 8))
+        raise RuntimeError("Unreachable PageIndex retry state")
 
     requests.sessions.Session.request = request
     try:
