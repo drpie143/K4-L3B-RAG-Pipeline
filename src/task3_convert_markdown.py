@@ -13,6 +13,7 @@ Cài đặt:
 -> Hoặc dùng công cụ nào bạn quen khác Markitdown
 """
 
+import json
 from pathlib import Path
 
 
@@ -21,40 +22,64 @@ OUTPUT_DIR = Path(__file__).parent.parent / "data" / "standardized"
 
 
 def convert_legal_docs() -> None:
-    # TODO:Convert PDF/DOCX vào standardized/legal. 
-    #
-    # from markitdown import MarkItDown
-    # legal_dir = LANDING_DIR / "legal"
-    # output_dir = OUTPUT_DIR / "legal"
-    # output_dir.mkdir(parents=True, exist_ok=True)
-    # converter = MarkItDown()
-    # for path in legal_dir.iterdir():
-    #     if path.suffix.lower() in {".pdf", ".doc", ".docx"}:
-    #         result = converter.convert(str(path))
-    #         (output_dir / f"{path.stem}.md").write_text(
-    #             result.text_content, encoding="utf-8"
-    #         )
-    raise NotImplementedError("Implement convert_legal_docs")
+    """Convert tài liệu legal thật; không sinh nội dung mẫu khi thư mục rỗng."""
+    legal_dir = LANDING_DIR / "legal"
+    paths = [
+        path for path in sorted(legal_dir.iterdir())
+        if path.suffix.lower() in {".pdf", ".doc", ".docx"}
+    ]
+    if not paths:
+        return
+
+    from markitdown import MarkItDown
+
+    output_dir = OUTPUT_DIR / "legal"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    converter = MarkItDown()
+    for path in paths:
+        result = converter.convert(str(path))
+        content = result.text_content.strip()
+        if not content:
+            raise ValueError(f"Conversion produced empty content: {path}")
+        markdown = _front_matter(
+            title=path.stem.replace("_", " "),
+            source=path.name,
+            doc_type="legal",
+            url="",
+        ) + content
+        (output_dir / f"{path.stem}.md").write_text(markdown, encoding="utf-8")
 
 
 def convert_news_articles() -> None:
-    # TODO: Convert JSON vào standardized/news.
-    #
-    # import json
-    # news_dir = LANDING_DIR / "news"
-    # output_dir = OUTPUT_DIR / "news"
-    # output_dir.mkdir(parents=True, exist_ok=True)
-    # for path in news_dir.glob("*.json"):
-    #     data = json.loads(path.read_text(encoding="utf-8"))
-    #     header = (
-    #         f"# {data['title']}\n\n"
-    #         f"**Source:** {data['url']}\n\n"
-    #         f"**Crawled:** {data['date_crawled']}\n\n---\n\n"
-    #     )
-    #     (output_dir / f"{path.stem}.md").write_text(
-    #         header + data["content_markdown"], encoding="utf-8"
-    #     )
-    raise NotImplementedError("Implement convert_news_articles")
+    """Convert các JSON crawl thật và giữ metadata nguồn trong front matter."""
+    news_dir = LANDING_DIR / "news"
+    output_dir = OUTPUT_DIR / "news"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    required = {"url", "title", "date_crawled", "content_markdown"}
+    for path in sorted(news_dir.glob("*.json")):
+        data = json.loads(path.read_text(encoding="utf-8"))
+        missing = required - data.keys()
+        if missing:
+            raise ValueError(f"{path.name} is missing fields: {sorted(missing)}")
+        if any(not str(data[key]).strip() for key in required):
+            raise ValueError(f"{path.name} contains empty required fields")
+        markdown = _front_matter(
+            title=data["title"],
+            source=path.name,
+            doc_type="news",
+            url=data["url"],
+            date_crawled=data["date_crawled"],
+        ) + data["content_markdown"].strip()
+        (output_dir / f"{path.stem}.md").write_text(markdown, encoding="utf-8")
+
+
+def _front_matter(**metadata: str) -> str:
+    lines = ["---"]
+    for key, value in metadata.items():
+        safe_value = str(value).replace("\r", " ").replace("\n", " ").replace('"', "'")
+        lines.append(f'{key}: "{safe_value}"')
+    lines.extend(["---", ""])
+    return "\n".join(lines) + "\n"
 
 
 def convert_all() -> None:

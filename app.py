@@ -1,12 +1,14 @@
 import streamlit as st
 from dotenv import load_dotenv
 
+from src.task10_generation import generate_with_citation
+
 
 load_dotenv()
 
 st.set_page_config(
     page_title="RAG Chatbot",
-    page_icon="",
+    page_icon="💬",
     layout="wide",
 )
 
@@ -15,16 +17,34 @@ if "messages" not in st.session_state:
 
 with st.sidebar:
     st.title("RAG Chatbot")
-    st.caption("Thay mô tả theo đề tài của nhóm")
+    st.caption("Chủ đề và corpus sẽ được cấu hình sau khi nhóm thống nhất.")
     top_k = st.slider("Số chunks", 3, 10, 5)
 
 st.title("RAG Chatbot")
-st.caption("Thay tiêu đề và hướng dẫn sử dụng")
+st.caption("Câu trả lời chỉ được tạo từ các nguồn đã index và luôn kèm citation.")
+
+
+def show_sources(sources: list[dict]) -> None:
+    """Hiển thị nguồn retrieval theo cách có thể kiểm chứng."""
+    if not sources:
+        return
+    with st.expander(f"Nguồn đã dùng ({len(sources)})"):
+        for index, source in enumerate(sources, 1):
+            metadata = source["metadata"]
+            st.markdown(f"**[S{index}] {metadata['title']}**")
+            if metadata.get("url"):
+                st.markdown(f"[{metadata['source']}]({metadata['url']})")
+            else:
+                st.caption(metadata["source"])
+            st.caption(
+                f"Method: {source['retrieval_method']} · Score: {source['score']:.4f}"
+            )
+            st.text(source["content"][:500])
 
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
-        # TODO: Hiển thị sources và retrieval score.
+        show_sources(message.get("sources", []))
 
 query = st.chat_input("Nhập câu hỏi...")
 
@@ -35,11 +55,20 @@ if query:
         st.markdown(query)
 
     with st.chat_message("assistant"):
-        # TODO: Gọi generate_with_citation(query, top_k).
-        answer = "TODO: Itegration RAG Pipeline hêre"
-        sources = []
-        st.markdown(answer)
+        with st.spinner("Đang tìm nguồn và tạo câu trả lời..."):
+            try:
+                result = generate_with_citation(query, top_k=top_k)
+            except Exception as error:
+                result = {
+                    "answer": f"Không thể xử lý yêu cầu lúc này: {error}",
+                    "sources": [],
+                    "retrieval_source": "none",
+                }
+        st.markdown(result["answer"])
+        show_sources(result["sources"])
 
-        # TODO: Hiển thị sources và citation.
-
-    # TODO: Lưu answer và sources vào session state.
+    st.session_state.messages.append({
+        "role": "assistant",
+        "content": result["answer"],
+        "sources": result["sources"],
+    })
