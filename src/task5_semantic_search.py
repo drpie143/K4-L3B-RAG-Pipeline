@@ -10,6 +10,9 @@ from .task4_chunking_indexing import embed_texts, get_collection
 
 def semantic_search(query: str, top_k: int = 10) -> list[dict]:
     """Trả về dense SearchResult theo score giảm dần."""
+    if not isinstance(query, str) or not query.strip() or top_k <= 0:
+        return []
+
     query_vector = embed_texts([query])[0]
     response = get_collection().query(
         query_embeddings=[query_vector],
@@ -17,21 +20,23 @@ def semantic_search(query: str, top_k: int = 10) -> list[dict]:
         include=["documents", "metadatas", "distances"],
     )
     results = []
-    if response and response["ids"] and len(response["ids"]) > 0:
-        for item_id, content, metadata, distance in zip(
-            response["ids"][0],
-            response["documents"][0],
-            response["metadatas"][0],
-            response["distances"][0],
-        ):
-            results.append({
-                "id": item_id,
-                "content": content,
-                "score": max(0.0, 1.0 - float(distance)),
-                "metadata": metadata,
-                "retrieval_method": "dense",
-            })
-    return sorted(results, key=lambda item: item["score"], reverse=True)[:top_k]
+    for item_id, content, metadata, distance in zip(
+        response.get("ids", [[]])[0],
+        response.get("documents", [[]])[0],
+        response.get("metadatas", [[]])[0],
+        response.get("distances", [[]])[0],
+    ):
+        normalized_metadata = dict(metadata or {})
+        if normalized_metadata.get("url") == "":
+            normalized_metadata["url"] = None
+        results.append({
+            "id": item_id,
+            "content": content,
+            "score": max(0.0, 1.0 - float(distance)),
+            "metadata": normalized_metadata,
+            "retrieval_method": "dense",
+        })
+    return sorted(results, key=lambda item: (-item["score"], item["id"]))[:top_k]
 
 
 if __name__ == "__main__":

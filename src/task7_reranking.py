@@ -16,18 +16,30 @@ def rerank_rrf(
     k: int = 60,
 ) -> list[dict]:
     """Fuse nhiều ranked lists và trả hybrid SearchResult."""
-    scores = {}
-    items = {}
+    if top_k <= 0 or k < 0:
+        return []
+
+    scores: dict[str, float] = {}
+    items: dict[str, dict] = {}
+    first_seen: dict[str, int] = {}
+    order = 0
     for ranked_list in ranked_lists:
+        seen_in_list = set()
         for rank, item in enumerate(ranked_list, 1):
             item_id = item["id"]
+            if item_id in seen_in_list:
+                continue
+            seen_in_list.add(item_id)
             scores[item_id] = scores.get(item_id, 0.0) + 1 / (k + rank)
-            items[item_id] = item
+            items.setdefault(item_id, item)
+            if item_id not in first_seen:
+                first_seen[item_id] = order
+                order += 1
 
-    ranked_ids = sorted(scores, key=scores.get, reverse=True)
+    ranked_ids = sorted(scores, key=lambda item_id: (-scores[item_id], first_seen[item_id]))
     results = []
     for item_id in ranked_ids[:top_k]:
-        result = items[item_id].copy()
+        result = {**items[item_id], "metadata": dict(items[item_id]["metadata"])}
         result["score"] = scores[item_id]
         result["retrieval_method"] = "hybrid"
         results.append(result)

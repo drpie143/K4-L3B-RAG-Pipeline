@@ -1,0 +1,21 @@
+[theme]
+primaryColor = "#2a78d6"
+baseRadius = "medium"
+
+[theme.light]
+primaryColor = "#2a78d6"
+backgroundColor = "#fcfcfb"
+secondaryBackgroundColor = "#f3f4f6"
+textColor = "#1f2328"
+
+[theme.dark]
+primaryColor = "#3987e5"
+backgroundColor = "#131416"
+secondaryBackgroundColor = "#1e2024"
+textColor = "#f2f2f0"
+
+[client]
+toolbarMode = "minimal"
+
+[browser]
+gatherUsageStats = false
