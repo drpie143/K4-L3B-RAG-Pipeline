@@ -18,6 +18,7 @@ nguồn, ngày ban hành và ngày hiệu lực nằm trong `data/standardized/`
 - Chatbot Streamlit hiển thị câu trả lời và nguồn đã dùng.
 - Golden dataset tối thiểu 15 câu; đánh giá 4 metric và so sánh A/B.
 - `group_project/evaluation/RESULT.md`.
+- `TEAMMATES.md` ghi thành viên, nhánh và commit phụ trách.
 - Mỗi thành viên nộp báo cáo cá nhân trong `reports/`.
 
 ## Quick start
@@ -37,7 +38,18 @@ Trên PowerShell dùng:
 Copy-Item .env.example .env
 ```
 
-Điền API key cần dùng trong `.env`; không commit file này.
+Điền API key cần dùng trong `.env`; không commit file này. Cấu hình tối thiểu để
+chạy đầy đủ Task 8, Task 10 và evaluation:
+
+```dotenv
+LLM_PROVIDER=openai
+LLM_MODEL=gpt-5-mini
+OPENAI_API_KEY=...
+OPENAI_REASONING_EFFORT=low
+RAGAS_LLM_MODEL=gpt-4o-mini
+PAGEINDEX_API_KEY=...
+SCORE_THRESHOLD=0.55
+```
 
 ```bash
 # 1. Thu thập và chuẩn hoá
@@ -45,13 +57,40 @@ python -m src.task1_collect_legal_docs
 python -m src.task2_crawl_news
 python -m src.task3_convert_markdown
 
-# 2. Index và kiểm tra contract
+# 2. Chunk, index và thử từng retrieval component
 python -m src.task4_chunking_indexing
+python -m src.task5_semantic_search
+python -m src.task6_lexical_search
+python -m src.task7_reranking
+
+# 3. Upload PageIndex, chạy retrieval và generation
+# Lần đầu Task 8 sẽ tạo/upload PDF và có thể mất vài phút.
+python -m src.task8_pageindex_vectorless
+python -m src.task9_retrieval_pipeline
+python -m src.task10_generation
+
+# 4. Tái tạo kết quả evaluation
+python -m group_project.evaluation.evaluate_retrieval
+# Gọi OpenAI nhiều lần và có phát sinh API cost.
+python -m group_project.evaluation.evaluate_rag
+
+# 5. Chạy toàn bộ test
 pytest -q
 
-# 3. Chạy sản phẩm
+# 6. Chạy sản phẩm
 streamlit run app.py
 ```
+
+Các artifact cần kiểm tra sau khi chạy:
+
+- `chroma_db/`: vector store local, không commit.
+- `pageindex_doc_ids.json`, `pageindex_pdfs/`: cache Task 8, không commit.
+- `group_project/evaluation/retrieval_results.json`: retrieval A/B và threshold.
+- `group_project/evaluation/ragas_results.json`: 15 câu × 2 cấu hình và 4 metrics.
+- `group_project/evaluation/RESULT.md`: bảng tổng hợp và failure analysis.
+
+`evaluate_rag.py` lưu generation tạm vào file cache bị gitignore. Nếu evaluator
+gặp lỗi, lần chạy sau tái sử dụng các câu đã sinh thay vì gọi lại toàn bộ.
 
 ## Thiết kế retrieval hiện tại
 
@@ -82,6 +121,29 @@ Kết quả generation/RAGAS thật trên 15 câu × 2 cấu hình:
 Chi tiết 30 case nằm trong `group_project/evaluation/ragas_results.json`. Task 8
 đã được kiểm tra bằng PageIndex Cloud thật trên 14 tài liệu; cache document ID và
 retry polling giúp tránh upload lại hoặc làm hỏng pipeline khi mạng chập chờn.
+
+## Kịch bản demo không phụ thuộc UI
+
+Trước buổi demo, chạy `pytest -q`, sau đó kiểm tra ba tình huống:
+
+1. **In-domain:** “Hộ kinh doanh tạm ngừng từ bao nhiêu ngày thì phải đăng ký và
+   phải báo trước bao lâu?” Kết quả phải nêu 15 ngày, 03 ngày làm việc và có
+   citation `[S#]`.
+2. **Out-of-domain:** “Thời tiết Hà Nội ngày mai thế nào?” Kết quả phải từ chối
+   an toàn, không tự tạo thông tin thời tiết hoặc citation giả.
+3. **A/B:** trình bày `retrieval_results.json` và `ragas_results.json`. Hybrid giữ
+   Hit@5 = 1,000 và tăng MRR@5 từ 0,806 lên 0,889; dense có RAGAS average 0,857
+   so với hybrid 0,845 do context của hybrid nhiễu hơn nhẹ.
+
+Để ép kiểm tra PageIndex fallback mà không sửa `.env`, có thể gọi:
+
+```powershell
+$env:PYTHONIOENCODING='utf-8'
+.venv/Scripts/python.exe -c "from src.task9_retrieval_pipeline import retrieve; print(retrieve('Hộ kinh doanh tạm ngừng từ bao nhiêu ngày?', top_k=3, score_threshold=1.1))"
+```
+
+PageIndex hiện tìm trên 14 tài liệu theo tuần tự nên lượt fallback thật có thể
+mất vài phút; document ID đã được cache nên không upload lại nếu tài liệu không đổi.
 
 ## Lộ trình 3 giờ
 
